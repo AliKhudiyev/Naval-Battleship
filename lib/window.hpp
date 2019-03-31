@@ -5,16 +5,16 @@
 #pragma once
 
 #include"event.hpp"
-#include"cell.hpp"
-#include"field.hpp"
+// #include"cell.hpp"
+#include"position.hpp"
+#include"user.hpp"
 
 class Window: public Event{
     private:
     unsigned running;
     SDL_Surface* surface[2];
     SDL_Surface* test, *block;
-    Field *field, *my_field;
-    Cell cells[121];
+    Position position;
 
     public:
     Window(){
@@ -23,34 +23,27 @@ class Window: public Event{
         surface[1]=NULL;
         test=NULL;
         block=NULL;
-        field=nullptr;
 
-        for(unsigned i=0;i<11;++i){
-            for(unsigned j=0;j<11;++j){
-                cells[11*i+j].x=j*50;
-                cells[11*i+j].y=i*50;
-                cells[11*i+j].image="";
-            }
-        }
-        my_field=new Field();
+        on_init();
     }
-
-    int on_execute(Field* fld);
-    void set(unsigned state){
-        running=state;
+    static Window* create(){
+        if(!window) window=new Window();
+        return window;
     }
-    void draw_at(const Position& position, unsigned stat);
-    Field* get_field(){ return my_field; }
+    int on_execute(User& user1, User& user2);
 
     bool on_init();
     void on_event(SDL_Event* event);
     void on_exit();
-    void on_loop();
+    void on_loop(User& user1, User& user2);
     void on_render();
     void on_quit();
 
     void on_LButton_down(int x, int y);
     ~Window(){
-        delete my_field;
+        window->on_quit();
     }
+
+    private:
+    static Window* window;
 };

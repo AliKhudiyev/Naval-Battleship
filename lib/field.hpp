@@ -12,11 +12,12 @@ class Field{
     private:
     Ship ships_[MAX_SHIPS];
     unsigned is_shot_[121];     // 0 - not shot and not ship, 1 - shot ship, 2 - shot sea, 3 - ship exists
+    unsigned enemy_is_shot_[121];
 
     public:
     Field(){
         unsigned ship_size[4]{2,1,1,1};
-        for(unsigned i=0;i<121;++i) is_shot_[i]=0;
+        for(unsigned i=0;i<121;++i){ is_shot_[i]=0; is_shot_[i]=0; }
         for(unsigned i=0;i<MAX_SHIPS;++i){
             SELECTION:
             std::cout<<"Enter a ship size: ";
