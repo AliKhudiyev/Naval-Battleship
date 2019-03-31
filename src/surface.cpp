@@ -1,9 +1,7 @@
 #include"surface.hpp"
 #include<iostream>
 
-Surface::Surface(){
-    ;
-}
+Surface::Surface(){}
 
 SDL_Surface* Surface::on_load(const char* file_name){
     SDL_Surface* tmp=nullptr;
@@ -11,7 +9,7 @@ SDL_Surface* Surface::on_load(const char* file_name){
 
     if(!(tmp=SDL_LoadBMP(file_name))) return NULL;
 
-    surface=SDL_DisplayFormat(tmp); // gives segmentation fault!
+    surface=SDL_DisplayFormat(tmp);
     SDL_FreeSurface(tmp);
 
     return surface;

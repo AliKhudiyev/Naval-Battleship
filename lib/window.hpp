@@ -1,11 +1,9 @@
 
 #include<SDL/SDL.h>
-#include<iostream>
 
 #pragma once
 
 #include"event.hpp"
-#include"position.hpp"
 #include"user.hpp"
 
 class Window: public Event{

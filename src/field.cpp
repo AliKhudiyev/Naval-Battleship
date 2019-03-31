@@ -1,8 +1,8 @@
 #include"field.hpp"
 
 Field::Field(){
-unsigned ship_size[4]{2,1,1,1};
-    for(unsigned i=0;i<121;++i){ is_shot_[i]=enemy_is_shot_[i]=0; }
+    unsigned ship_size[4]{2,1,1,1};
+    for(unsigned i=0;i<MAX_CELL;++i){ is_shot_[i]=enemy_is_shot_[i]=0; }
     for(unsigned i=0;i<MAX_SHIPS;++i){
         SELECTION:
         std::cout<<"Enter a ship size: ";
@@ -22,7 +22,7 @@ unsigned ship_size[4]{2,1,1,1};
         std::cout<<"Enter a beginning position: ";
         int x, y;
         std::cin>>x>>y;
-        if(x<0 || x>10 || y<0 || y>10){
+        if(Field::is_out(x, y)){
             std::cout<<"Position is out of the board!\n";
             goto POSITIONING;
         }
@@ -42,12 +42,12 @@ unsigned ship_size[4]{2,1,1,1};
 
         for(unsigned l=0;l<length;++l){
             if(orientation){
-                if(is_out(x, y+l)){
+                if(Field::is_out(x, y+l)){
                     std::cout<<"A ship is out of board!\n";
                     goto POSITIONING;
                 }
             } else{
-                if(is_out(x+l ,y)){
+                if(Field::is_out(x+l ,y)){
                     std::cout<<"A ship is out of board!\n";
                     goto POSITIONING;
                 }
@@ -78,23 +78,23 @@ bool Field::is_out(int x, int y){
 }
 
 unsigned Field::fire(const Position& position){
-    if(position.x_<0 || position.x_>10 ||
-       position.y_<0 || position.y_>10){
+    if(Field::is_out(position.x_, position.y_)){
            std::cout<<"Point is out of board!\n";
            return 0;
     }
-    if(is_shot_[11*position.y_+position.x_]!=3 && is_shot_[11*position.y_+position.x_]){
+    if(is_shot_[MAX_COLUMN*position.y_+position.x_]!=S_SHIP_EXISTS && 
+       is_shot_[MAX_COLUMN*position.y_+position.x_]){
         std::cout<<"Cannot shoot here more than once!\n";
         return 0;
     }
     for(auto& ship: ships_){
         if(ship.fire(position)){
-            is_shot_[11*position.y_+position.x_]=1;
-            return 1;
+            is_shot_[MAX_COLUMN*position.y_+position.x_]=S_SHOT_SHIP;
+            return S_SHOT_SHIP;
         }
     }
-    is_shot_[11*position.y_+position.x_]=2;
-    return 2;
+    is_shot_[11*position.y_+position.x_]=S_SHOT_SEA;
+    return S_SHOT_SEA;
 }
 
 bool Field::is_defeated() const{
@@ -130,5 +130,6 @@ bool Field::is_crashed(const Position& position, unsigned length, bool orientati
 }
 
 unsigned Field::operator[](unsigned i) const{
+    if(i>=MAX_CELL) return -1;
     return is_shot_[i];
 }

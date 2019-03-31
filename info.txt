@@ -48,3 +48,16 @@ LEAK SUMMARY:
 ==15875==         suppressed: 0 bytes in 0 blocks
 ==15875==
 ==15875== ERROR SUMMARY: 5 errors from 5 contexts (suppressed: 0 from 0)
+--------------------------------------------------------------------------------------
+LEAK SUMMARY:
+==18005==    definitely lost: 38 bytes in 4 blocks
+==18005==    indirectly lost: 352 bytes in 8 blocks
+==18005==      possibly lost: 0 bytes in 0 blocks
+==18005==    still reachable: 57,262 bytes in 857 blocks
+==18005==         suppressed: 0 bytes in 0 blocks
+==18005==
+==18005== ERROR SUMMARY: 3 errors from 3 contexts (suppressed: 3884 from 1)
+--18005--
+--18005-- used_suppression:   3884 X on SUSE11 writev uninit padding /usr/lib/valgrind/default.supp:397
+==18005==
+==18005== ERROR SUMMARY: 3 errors from 3 contexts (suppressed: 3884 from 1)

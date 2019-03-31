@@ -3,6 +3,10 @@
 
 #pragma once
 
+#define MAX_COLUMN 11
+#define MAX_ROW 11
+
+#define MAX_CELL MAX_COLUMN*MAX_ROW
 #define MAX_SHIPS 1
 
 struct Position{

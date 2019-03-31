@@ -6,8 +6,8 @@ Window* Window::window=nullptr;
 
 Window::Window(){
     running=1;
-    surface[0]=surface[1]=NULL;
-    block=NULL;
+    surface[0]=surface[1]=nullptr;
+    block=nullptr;
     position.init(-1, -1);
     for(unsigned i=0;i<121;++i){
         cell_status[i]=my_cell_status[i]=0;
@@ -31,15 +31,15 @@ int Window::on_execute(User& user1, User& user2){
         while(SDL_PollEvent(&event)) on_event(&event);
         on_loop(user1, user2);
         on_render();
-        if(running!=1) sleep(1);
+        if(running==0) sleep(1);
     }
-    return 0;
+    return running;
 }
 
 bool Window::on_init(){
     if(SDL_Init(SDL_INIT_VIDEO)<0) return false;
     if(!(surface[0]=SDL_SetVideoMode(1110, 550, 32, SDL_HWSURFACE | SDL_DOUBLEBUF))) return false;
-    if(!(surface[1]=Surface::on_load("resource/enemyBackground.bmp"))) return false;
+    if(!(surface[1]=Surface::on_load(BACKGROUND))) return false;
     return true;
 }
 
@@ -73,32 +73,32 @@ void Window::on_render(){
     Surface::on_draw(surface[0], surface[1], 560, 0);
     for(unsigned i=0;i<121;++i){
         if(cell_status[i]==1){
-            if(!(block=Surface::on_load("resource/shotShip.bmp"))){
+            if(!(block=Surface::on_load(SHOT_SHIP))){
                 std::cout<<"Failed to load the image!\n";
             }
             Surface::on_draw(surface[0], block, 50*(i-(i/11)*11)+1, 50*(i/11)+1);
             SDL_FreeSurface(block);
         } else if(cell_status[i]==2){
-            if(!(block=Surface::on_load("resource/shotSea.bmp"))){
+            if(!(block=Surface::on_load(SHOT_SEA))){
                 std::cout<<"Failed to load the image!\n";
             }
             Surface::on_draw(surface[0], block, 50*(i-(i/11)*11)+1, 50*(i/11)+1);
             SDL_FreeSurface(block);
         }
         if(my_cell_status[i]==1){
-            if(!(block=Surface::on_load("resource/lostShip.bmp"))){
+            if(!(block=Surface::on_load(LOST_SHIP))){
                 std::cout<<"Failed to load the image!\n";
             }
             Surface::on_draw(surface[0], block, 560+50*(i-(i/11)*11)+1, 50*(i/11)+1);
             SDL_FreeSurface(block);
         } else if(my_cell_status[i]==2){
-            if(!(block=Surface::on_load("resource/lostSea.bmp"))){
+            if(!(block=Surface::on_load(LOST_SEA))){
                 std::cout<<"Failed to load the image!\n";
             }
             Surface::on_draw(surface[0], block, 560+50*(i-(i/11)*11)+1, 50*(i/11)+1);
             SDL_FreeSurface(block);
         } else if(my_cell_status[i]==3){
-            if(!(block=Surface::on_load("resource/ship.bmp"))){
+            if(!(block=Surface::on_load(SHIP))){
                 std::cout<<"Failed to load the image!\n";
             }
             Surface::on_draw(surface[0], block, 560+50*(i-(i/11)*11)+1, 50*(i/11)+1);

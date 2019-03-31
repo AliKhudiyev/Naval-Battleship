@@ -1,12 +1,8 @@
 #include"event.hpp"
 
-Event::Event(){
-    ;
-}
+Event::Event(){}
 
-Event::~Event(){
-    ;
-}
+Event::~Event(){}
 
 void Event::on_event(SDL_Event* event){
     switch(event->type){

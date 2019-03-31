@@ -1,6 +1,5 @@
 #include<iostream>
 #include"window.hpp"
-#include"user.hpp"
 
 using namespace std;
 
@@ -10,16 +9,22 @@ int main(int argc, char* argv[]){
     User Kanan("Kanan");
 
     Window* window=Window::Create();
-    
+    unsigned stat;
     while(1){
-        window->on_execute(Ali, Kanan);
+        stat=window->on_execute(Ali, Kanan);
         if(Kanan.is_defeated()){
             std::cout<<Ali.name()<<" won!\n";
             break;
+        } else if(stat==2){
+            std::cout<<"Quitting the game.\n";
+            break;
         }
-        window->on_execute(Kanan, Ali);
+        stat=window->on_execute(Kanan, Ali);
         if(Ali.is_defeated()){
             std::cout<<Kanan.name()<<" won!\n";
+            break;
+        } else if(stat==2){
+            std::cout<<"Quitting the game.\n";
             break;
         }
     }
