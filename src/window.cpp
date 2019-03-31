@@ -62,8 +62,6 @@ void Window::on_loop(User& user1, User& user2){
         } else{
             running=0;
         }
-        // user1.copy_status(my_cell_status);
-        // user2.copy_status(cell_status);
         position.init(-1, -1);
     }
     user1.copy_status(my_cell_status);
@@ -118,5 +116,4 @@ void Window::on_quit(){
 
 void Window::on_LButton_down(int x, int y){
     position.init(x/50, y/50);
-    std::cout<<"Position : "<<position.x_<<" "<<position.y_<<'\n';
 }
