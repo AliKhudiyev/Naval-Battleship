@@ -13,8 +13,5 @@ int main(int argc, char* argv[]){
         if(Kanan.play(Ali)==2) break; // ==2
     }
 
-    Ali.is_defeated();
-    Kanan.is_defeated();
-
     return 0;
 }
