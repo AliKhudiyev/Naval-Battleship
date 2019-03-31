@@ -16,6 +16,9 @@ class User{
     ~User(){}
 
     const std::string& name() const{ return name_; }
+    void copy_status(unsigned* status){
+        for(unsigned i=0;i<121;++i) status[i]=field_[i];
+    }
     unsigned play(User& user);
     unsigned fire(const Position& position){
         unsigned stat=field_.fire(position);

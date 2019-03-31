@@ -38,3 +38,13 @@ LEAK SUMMARY:
 ==5668== ERROR SUMMARY: 3 errors from 3 contexts (suppressed: 126 from 1)
 -------------------------------------------------------------------------------------
 Conculusion: SDL_INIT sucks!
+However!
+NEW VERSION OF THE GAME WITH ONLY ONE WINDOW.
+LEAK SUMMARY:
+==15875==    definitely lost: 38 bytes in 4 blocks
+==15875==    indirectly lost: 352 bytes in 8 blocks
+==15875==      possibly lost: 0 bytes in 0 blocks
+==15875==    still reachable: 57,262 bytes in 857 blocks
+==15875==         suppressed: 0 bytes in 0 blocks
+==15875==
+==15875== ERROR SUMMARY: 5 errors from 5 contexts (suppressed: 0 from 0)

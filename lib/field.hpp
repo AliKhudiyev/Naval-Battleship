@@ -17,7 +17,7 @@ class Field{
     public:
     Field(){
         unsigned ship_size[4]{2,1,1,1};
-        for(unsigned i=0;i<121;++i){ is_shot_[i]=0; is_shot_[i]=0; }
+        for(unsigned i=0;i<121;++i){ is_shot_[i]=enemy_is_shot_[i]=0; }
         for(unsigned i=0;i<MAX_SHIPS;++i){
             SELECTION:
             std::cout<<"Enter a ship size: ";
@@ -95,4 +95,5 @@ class Field{
     bool is_defeated() const;
     bool is_crashed(const Position& position, unsigned length, bool orientation) const;
     unsigned operator[](unsigned i) const{ return is_shot_[i]; }
+    unsigned enemy_shot(unsigned i) const{ return enemy_is_shot_[i]; }
 };

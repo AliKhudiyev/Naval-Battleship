@@ -11,10 +11,14 @@
 
 class Window: public Event{
     private:
+    // static Window* window;
+
+    private:
     unsigned running;
     SDL_Surface* surface[2];
     SDL_Surface* test, *block;
     Position position;
+    unsigned *cell_status, *my_cell_status;
 
     public:
     Window(){
@@ -23,13 +27,19 @@ class Window: public Event{
         surface[1]=NULL;
         test=NULL;
         block=NULL;
+        position.init(-1, -1);
+        cell_status=new unsigned[121];
+        my_cell_status=new unsigned[121];
+        for(unsigned i=0;i<121;++i){
+            cell_status[i]=my_cell_status[i]=0;
+        }
 
         on_init();
     }
-    static Window* create(){
-        if(!window) window=new Window();
-        return window;
-    }
+    // static Window* create(){
+        // window=new Window();
+        // return window;
+    // }
     int on_execute(User& user1, User& user2);
 
     bool on_init();
@@ -41,9 +51,9 @@ class Window: public Event{
 
     void on_LButton_down(int x, int y);
     ~Window(){
-        window->on_quit();
+        // window->on_quit();
+        on_quit();
+        delete cell_status;
+        delete my_cell_status;
     }
-
-    private:
-    static Window* window;
 };

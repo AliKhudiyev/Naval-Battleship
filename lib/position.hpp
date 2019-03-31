@@ -3,7 +3,7 @@
 
 #pragma once
 
-#define MAX_SHIPS 5
+#define MAX_SHIPS 1
 
 struct Position{
     int x_, y_;
@@ -15,4 +15,5 @@ struct Position{
     void init(unsigned x, unsigned y);
     friend std::istream& operator>>(std::istream& in, Position& position);
     bool operator==(const Position& position) const;
+    bool operator!=(const Position& position) const;
 };
