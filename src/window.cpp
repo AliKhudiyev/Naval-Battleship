@@ -31,7 +31,9 @@ void Window::on_exit(){
 
 void Window::on_loop(User& user1, User& user2){
     unsigned stat=user2.fire(position);
-    
+    if(stat==1){
+        std::cout<<user1.name()<<"| Succesful shot!\n";
+    }
 }
 
 void Window::on_render(){
