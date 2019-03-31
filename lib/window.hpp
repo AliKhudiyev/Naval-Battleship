@@ -14,14 +14,16 @@ class Window: public Event{
     SDL_Surface* surface[2];
     SDL_Surface* test, *block;
     Field *field, *my_field;
-    Cell cells[121], my_cells[121];
+    Cell cells[121];
 
     public:
     Window(){
         running=1;
-        surface[0]=surface[1]=nullptr;
-        test=nullptr;
-        block=nullptr;
+        surface[0]=NULL;
+        surface[1]=NULL;
+        test=NULL;
+        block=NULL;
+        field=nullptr;
 
         for(unsigned i=0;i<11;++i){
             for(unsigned j=0;j<11;++j){
@@ -37,7 +39,7 @@ class Window: public Event{
     void set(unsigned state){
         running=state;
     }
-    void draw_at(const Position& position, unsigned stat, unsigned pass=0);
+    void draw_at(const Position& position, unsigned stat);
     Field* get_field(){ return my_field; }
 
     bool on_init();
@@ -48,4 +50,7 @@ class Window: public Event{
     void on_quit();
 
     void on_LButton_down(int x, int y);
+    ~Window(){
+        delete my_field;
+    }
 };

@@ -11,7 +11,7 @@ static const unsigned nb_shot=121;
 class Field{
     private:
     Ship ships_[MAX_SHIPS];
-    unsigned is_shot_[121];     // 0 - not shot, 1 - shot ship, 2 - shot sea, 3 - ship exists
+    unsigned is_shot_[121];     // 0 - not shot and not ship, 1 - shot ship, 2 - shot sea, 3 - ship exists
 
     public:
     Field(){
@@ -83,6 +83,7 @@ class Field{
                 }
             }
         }
+        std::cout<<"Initialized!\n";
         std::cout<<"\033[2J\033[1;1H";
     }
     bool is_out(int x, int y){

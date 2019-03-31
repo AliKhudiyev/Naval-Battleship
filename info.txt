@@ -1,0 +1,40 @@
+BASIC WINDOW INITIALIZEMENT.
+LEAK SUMMARY:
+==3479==    definitely lost: 38 bytes in 4 blocks
+==3479==    indirectly lost: 352 bytes in 8 blocks
+==3479==      possibly lost: 0 bytes in 0 blocks
+==3479==    still reachable: 57,262 bytes in 857 blocks
+==3479==         suppressed: 0 bytes in 0 blocks
+==3479==
+==3479== ERROR SUMMARY: 3 errors from 3 contexts (suppressed: 1 from 1)
+--3479--
+--3479-- used_suppression:      1 X on SUSE11 writev uninit padding /usr/lib/valgrind/default.supp:397
+==3479==
+==3479== ERROR SUMMARY: 3 errors from 3 contexts (suppressed: 1 from 1)
+--------------------------------------------------------------------------------------
+UNCOMMENTING SOME EVENT AND RENDERING.
+LEAK SUMMARY:
+==3748==    definitely lost: 38 bytes in 4 blocks
+==3748==    indirectly lost: 352 bytes in 8 blocks
+==3748==      possibly lost: 0 bytes in 0 blocks
+==3748==    still reachable: 57,262 bytes in 857 blocks
+==3748==         suppressed: 0 bytes in 0 blocks
+==3748==
+==3748== ERROR SUMMARY: 3 errors from 3 contexts (suppressed: 0 from 0)
+==3748== ERROR SUMMARY: 3 errors from 3 contexts (suppressed: 0 from 0)
+--------------------------------------------------------------------------------------
+ONE TIME RUNNING WITH ALL OTHER FUNCTIONS ACTIVATED.
+LEAK SUMMARY:
+==5668==    definitely lost: 38 bytes in 4 blocks
+==5668==    indirectly lost: 352 bytes in 8 blocks
+==5668==      possibly lost: 0 bytes in 0 blocks
+==5668==    still reachable: 57,262 bytes in 857 blocks
+==5668==         suppressed: 0 bytes in 0 blocks
+==5668==
+==5668== ERROR SUMMARY: 3 errors from 3 contexts (suppressed: 126 from 1)
+--5668--
+--5668-- used_suppression:    126 X on SUSE11 writev uninit padding /usr/lib/valgrind/default.supp:397
+==5668==
+==5668== ERROR SUMMARY: 3 errors from 3 contexts (suppressed: 126 from 1)
+-------------------------------------------------------------------------------------
+Conculusion: SDL_INIT sucks!

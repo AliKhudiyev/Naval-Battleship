@@ -1,5 +1,5 @@
 GCC		= g++
-FLGS	= -g -Wextra --std=c++11 
+FLGS	= -g -Wextra --std=c++17 
 LIBS = `sdl-config --cflags --libs`
 
 SRC_DIR	= src
