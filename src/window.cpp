@@ -3,7 +3,6 @@
 #include<unistd.h>
 
 int Window::on_execute(User& user1, User& user2){
-    std::cout<<"On execute.\n";
     std::cout<<user1.name()<<" is shooting.\n";
     running=1;
     on_loop(user1, user2);
@@ -19,7 +18,6 @@ int Window::on_execute(User& user1, User& user2){
 }
 
 bool Window::on_init(){
-    std::cout<<"On init.\n";
     if(SDL_Init(SDL_INIT_VIDEO)<0) return false;
     if(!(surface[0]=SDL_SetVideoMode(1110, 550, 32, SDL_HWSURFACE | SDL_DOUBLEBUF))) return false;
     if(!(surface[1]=Surface::on_load("resource/background.bmp"))) return false;
@@ -36,7 +34,6 @@ void Window::on_exit(){
 }
 
 void Window::on_loop(User& user1, User& user2){
-    // std::cout<<"On loop.\n";
     if(position!=Position(-1, -1)){
         unsigned stat=user2.fire(position);
         if(stat==1){
@@ -49,7 +46,6 @@ void Window::on_loop(User& user1, User& user2){
         }
         // user1.copy_status(my_cell_status);
         // user2.copy_status(cell_status);
-        std::cout<<"Copied!\n";
         position.init(-1, -1);
     }
     user1.copy_status(my_cell_status);

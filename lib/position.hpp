@@ -3,7 +3,7 @@
 
 #pragma once
 
-#define MAX_SHIPS 1
+#define MAX_SHIPS 5
 
 struct Position{
     int x_, y_;

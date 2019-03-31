@@ -10,7 +10,7 @@
 #include"user.hpp"
 
 class Window: public Event{
-    private:
+    // private:
     // static Window* window;
 
     private:
@@ -18,7 +18,7 @@ class Window: public Event{
     SDL_Surface* surface[2];
     SDL_Surface* test, *block;
     Position position;
-    unsigned *cell_status, *my_cell_status;
+    unsigned cell_status[121], my_cell_status[121];
 
     public:
     Window(){
@@ -28,8 +28,6 @@ class Window: public Event{
         test=NULL;
         block=NULL;
         position.init(-1, -1);
-        cell_status=new unsigned[121];
-        my_cell_status=new unsigned[121];
         for(unsigned i=0;i<121;++i){
             cell_status[i]=my_cell_status[i]=0;
         }
@@ -53,7 +51,5 @@ class Window: public Event{
     ~Window(){
         // window->on_quit();
         on_quit();
-        delete cell_status;
-        delete my_cell_status;
     }
 };
