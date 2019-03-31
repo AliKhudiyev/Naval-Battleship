@@ -2,11 +2,30 @@
 #include"surface.hpp"
 #include<unistd.h>
 
+Window* Window::window=nullptr;
+
+Window::Window(){
+    running=1;
+    surface[0]=surface[1]=NULL;
+    block=NULL;
+    position.init(-1, -1);
+    for(unsigned i=0;i<121;++i){
+        cell_status[i]=my_cell_status[i]=0;
+    }
+
+    on_init();
+}
+
+Window* Window::Create(){
+    if(!Window::window) Window::window=new Window();
+    return Window::window;
+}
+
+
 int Window::on_execute(User& user1, User& user2){
     std::cout<<user1.name()<<" is shooting.\n";
     running=1;
-    on_loop(user1, user2);
-    on_render();
+    
     SDL_Event event;
     while(running==1){
         while(SDL_PollEvent(&event)) on_event(&event);
@@ -20,8 +39,7 @@ int Window::on_execute(User& user1, User& user2){
 bool Window::on_init(){
     if(SDL_Init(SDL_INIT_VIDEO)<0) return false;
     if(!(surface[0]=SDL_SetVideoMode(1110, 550, 32, SDL_HWSURFACE | SDL_DOUBLEBUF))) return false;
-    if(!(surface[1]=Surface::on_load("resource/background.bmp"))) return false;
-    if(!(test=Surface::on_load("resource/enemyBackground.bmp"))) return false;
+    if(!(surface[1]=Surface::on_load("resource/enemyBackground.bmp"))) return false;
     return true;
 }
 
@@ -53,7 +71,7 @@ void Window::on_loop(User& user1, User& user2){
 }
 
 void Window::on_render(){
-    Surface::on_draw(surface[0], test, 0, 0);
+    Surface::on_draw(surface[0], surface[1], 0, 0);
     Surface::on_draw(surface[0], surface[1], 560, 0);
     for(unsigned i=0;i<121;++i){
         if(cell_status[i]==1){
@@ -93,7 +111,6 @@ void Window::on_render(){
 }
 
 void Window::on_quit(){
-    SDL_FreeSurface(test);
     SDL_FreeSurface(surface[1]);
     SDL_FreeSurface(surface[0]);
     SDL_Quit();

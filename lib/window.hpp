@@ -5,39 +5,22 @@
 #pragma once
 
 #include"event.hpp"
-// #include"cell.hpp"
 #include"position.hpp"
 #include"user.hpp"
 
 class Window: public Event{
-    // private:
-    // static Window* window;
-
     private:
     unsigned running;
-    SDL_Surface* surface[2];
-    SDL_Surface* test, *block;
+    SDL_Surface* surface[2], *test;
+    SDL_Surface* block;
     Position position;
     unsigned cell_status[121], my_cell_status[121];
 
-    public:
-    Window(){
-        running=1;
-        surface[0]=NULL;
-        surface[1]=NULL;
-        test=NULL;
-        block=NULL;
-        position.init(-1, -1);
-        for(unsigned i=0;i<121;++i){
-            cell_status[i]=my_cell_status[i]=0;
-        }
+    private:
+    Window();
 
-        on_init();
-    }
-    // static Window* create(){
-        // window=new Window();
-        // return window;
-    // }
+    public:
+    static Window* Create();
     int on_execute(User& user1, User& user2);
 
     bool on_init();
@@ -49,7 +32,9 @@ class Window: public Event{
 
     void on_LButton_down(int x, int y);
     ~Window(){
-        // window->on_quit();
         on_quit();
     }
+
+    private:
+    static Window* window;
 };
