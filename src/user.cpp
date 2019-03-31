@@ -1,14 +1,19 @@
 #include"user.hpp"
 #include<cstdlib>
 
-unsigned User::play(User& user){
-    int stat=0;//window_.on_execute(user.get_field());
-    // window_.set(1);
-    // unsigned x, y;
-    // std::cout<<name_<<"| Enter to shoot: ";
-    // std::cin>>x>>y;
-    // Position position(x, y);
-    // unsigned stat=user.fire(position);
-    // std::cout<<"Play status: "<<stat<<'\n';
+const std::string& User::name() const{
+    return name_;
+}
+
+void User::copy_status(unsigned* status) const{
+    for(unsigned i=0;i<121;++i) status[i]=field_[i];
+}
+
+unsigned User::fire(const Position& position){
+    unsigned stat=field_.fire(position);
     return stat;
+}
+
+bool User::is_defeated() const{
+    return field_.is_defeated();
 }

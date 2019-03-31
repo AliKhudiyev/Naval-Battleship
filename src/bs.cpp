@@ -10,13 +10,6 @@ int main(int argc, char* argv[]){
     User Kanan("Kanan");
 
     Window* window=Window::Create();
-    // Window* win1=Window::Create();
-
-    // std::cout<<win<<" : "<<win1<<'\n';
-
-    // delete win;
-
-    // Window window;
     
     while(1){
         window->on_execute(Ali, Kanan);
