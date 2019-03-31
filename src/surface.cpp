@@ -1,8 +1,7 @@
 #include"surface.hpp"
+#include<iostream>
 
-Surface::Surface(){
-    ;
-}
+Surface::Surface(){}
 
 SDL_Surface* Surface::on_load(const char* file_name){
     SDL_Surface* tmp=nullptr;

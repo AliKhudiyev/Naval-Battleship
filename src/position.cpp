@@ -13,3 +13,8 @@ bool Position::operator==(const Position& position) const{
     if(x_==position.x_ && y_==position.y_) return true;
     return false;
 }
+
+bool Position::operator!=(const Position& position) const{
+    if(x_!=position.x_ || y_!=position.y_) return true;
+    return false;
+}

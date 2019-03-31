@@ -17,9 +17,12 @@ class Ship{
         length_=1;
     }
 
-    void init(const Position& position, unsigned length, bool orientation);
+    // getters
     unsigned get_length() const;
     const Position& get_position(unsigned i) const;
+    
+    // necessary functions
+    void init(const Position& position, unsigned length, bool orientation);
     bool fire(const Position& position);
     bool is_defeated() const;
 };

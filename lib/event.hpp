@@ -4,12 +4,6 @@
 
 #pragma once
 
-#define SHIP "ship.bmp"
-#define LOST_SHIP "lostShip.bmp"
-#define LOST_SEA "lostSea.bmp"
-#define SHOT_SHIP "shotShip.bmp"
-#define SHOT_SEA "shotSea.bmp"
-
 class Event{
     public:
     Event();
