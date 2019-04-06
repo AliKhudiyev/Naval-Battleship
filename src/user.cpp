@@ -10,6 +10,10 @@ void User::copy_status(unsigned* status) const{
     for(unsigned i=0;i<MAX_CELL;++i) status[i]=field_[i];
 }
 
+void User::copy_only_others_status(unsigned* status) const{
+    for(unsigned i=0;i<MAX_CELL;++i) status[i]=field_[i]==3? 0 : field_[i];
+}
+
 void User::copy_only_ship_status(unsigned* status) const{
     for(unsigned i=0;i<MAX_CELL;++i){
         if(field_[i]==S_SHIP_EXISTS) status[i]=field_[i];

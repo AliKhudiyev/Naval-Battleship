@@ -51,7 +51,7 @@ Position Field::generate(unsigned max_x, unsigned max_y, unsigned* status){
     // std::cout<<"k: "<<k<<'\n';
     for(unsigned j=0;k!=-1;++j){
         if(j>=MAX_CELL) j=0;
-        if(!status[j] || status[j]==3){ i=j; --k; }
+        if(!status[j]){ i=j; --k; }
     }
     position=Position(i-(i/MAX_COLUMN)*MAX_COLUMN, i/MAX_COLUMN);
     return position;
@@ -59,12 +59,9 @@ Position Field::generate(unsigned max_x, unsigned max_y, unsigned* status){
 
 Position Field::generate(const Position& max_position, const Position& position, unsigned* status){
     Position p1=position, p2(-1, -1), pos;
-    bool orientation;
+    bool orientation=VERTICAL;
     int direction=1;
     std::cout<<"RSS : "<<p1.x_<<' '<<p1.y_<<'\n';
-    for(unsigned i=0;i<121;++i){
-        if(status[i]==3) status[i]=0;
-    }
     for(unsigned i=1;i<MAX_SHIP_LENGTH;++i){
         if(!Field::is_out(p1.x_+i, p1.y_) && status[MAX_COLUMN*p1.y_+p1.x_+i]==1){
             p2=Position(p1.x_+i, p1.y_);

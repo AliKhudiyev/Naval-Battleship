@@ -110,7 +110,7 @@ void Window::on_exit(){
 void Window::on_loop(User& user1, User& user2){
     if(position!=DEFAULT_POSITION || user1.is_bot()){
         if(user1.is_bot()){
-            user2.copy_status(cell_status);
+            user2.copy_only_others_status(cell_status);
             // position=Field::generate(MAX_COLUMN, MAX_ROW, cell_status);
             position=Field::generate(Position(11, 11), user1.get_recent_succesful_shot(), cell_status);
         }
@@ -146,7 +146,7 @@ void Window::on_render(){
             Surface::on_draw(surface[0], block, CELL_SIZE*I2X(i)+1, CELL_SIZE*I2Y(i)+1);
             SDL_FreeSurface(block);
         }
-        /**
+        /**/
         else if(cell_status[i]==3){
             LOAD_BMP(block, SHIP)
             Surface::on_draw(surface[0], block, CELL_SIZE*I2X(i)+1, CELL_SIZE*I2Y(i)+1);

@@ -25,6 +25,7 @@ class User{
 
     const std::string& name() const;
     void copy_status(unsigned* status) const;
+    void copy_only_others_status(unsigned* status) const;
     void copy_only_ship_status(unsigned* status) const;
     bool set_ship(unsigned index, const Position& position, unsigned length, bool orientation);
     void set_recent_succesful_shot(const Position position);
