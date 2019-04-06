@@ -17,6 +17,7 @@ class Event{
     virtual void on_mouse_focus();
     virtual void on_mouse_blur();
     virtual void on_mouse_move(int mX, int mY, int relX, int relY, bool left, bool right, bool middle);
+    virtual void on_mouse_motion(int x, int y);
     virtual void on_LButton_down(int mX, int mY);
     virtual void on_LButton_up(int mX, int mY);
     virtual void on_RButton_down(int mX, int mY);

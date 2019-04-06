@@ -68,6 +68,12 @@ void Event::on_event(SDL_Event* event){
             }
             break;
         }
+        case SDL_MOUSEMOTION:{
+            int x, y;
+            SDL_GetMouseState(&x, &y);
+            on_mouse_motion(x, y);
+            break;
+        }
         case SDL_JOYAXISMOTION:{
             on_joy_axis(event->jaxis.which, event->jaxis.axis, event->jaxis.value);
             break;
@@ -123,6 +129,8 @@ void Event::on_mouse_focus(){}
 void Event::on_mouse_blur(){}
 
 void Event::on_mouse_move(int mX, int mY, int relX, int relY, bool left, bool right, bool middle){}
+
+void Event::on_mouse_motion(int x, int y){}
 
 void Event::on_LButton_down(int mX, int mY){}
 

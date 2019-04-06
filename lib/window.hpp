@@ -5,10 +5,14 @@
 
 #include"event.hpp"
 #include"user.hpp"
+#include"window_stat.hpp"
+
+#define DEFAULT_POSITION Position(-1, -1)
 
 class Window: public Event{
     private:
     unsigned running;
+    Window_Status status;
     SDL_Surface* surface[2], *test;
     SDL_Surface* block;
     Position position;
@@ -16,19 +20,25 @@ class Window: public Event{
 
     private:
     Window();
+    void reset();
 
     public:
     static Window* Create();
+    int run(User& user1, User& user2);
     int on_execute(User& user1, User& user2);
 
     bool on_init();
+    int on_pre_game(User& user);
     void on_event(SDL_Event* event);
     void on_exit();
     void on_loop(User& user1, User& user2);
     void on_render();
+    void on_pre_render();
     void on_quit();
 
     void on_LButton_down(int x, int y);
+    void on_RButton_down(int x, int y);
+    void on_mouse_motion(int x, int y);
     ~Window(){
         on_quit();
     }

@@ -17,11 +17,12 @@ class Field{
     public:
     Field();
 
+    bool set_ship(unsigned index, const Position& position, unsigned length, bool orientation);
     static bool is_out(int x, int y);
     unsigned fire(const Position& position);
     bool is_defeated() const;
     bool is_crashed(const Position& position, unsigned length, bool orientation) const;
-    
+
     // getter operator for is_shot_
     unsigned operator[](unsigned i) const;
 };

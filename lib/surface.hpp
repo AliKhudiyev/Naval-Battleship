@@ -3,12 +3,14 @@
 
 #pragma once
 
-#define BACKGROUND  "resource/background.bmp"
-#define SHIP        "resource/ship.bmp"
-#define SHOT_SHIP   "resource/shotShip.bmp"
-#define SHOT_SEA    "resource/shotSea.bmp"
-#define LOST_SHIP   "resource/lostShip.bmp"
-#define LOST_SEA    "resource/lostSea.bmp"
+#define BACKGROUND      "resource/background.bmp"
+#define SHIP            "resource/ship.bmp"
+#define SHOT_SHIP       "resource/shotShip.bmp"
+#define SHOT_SEA        "resource/shotSea.bmp"
+#define LOST_SHIP       "resource/lostShip.bmp"
+#define LOST_SEA        "resource/lostSea.bmp"
+#define SELECTED_SHIP   "resource/selectedShip.bmp"
+#define WELCOME         "resource/welcome.bmp"
 
 class Surface{
     public:

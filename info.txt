@@ -61,3 +61,14 @@ LEAK SUMMARY:
 --18005-- used_suppression:   3884 X on SUSE11 writev uninit padding /usr/lib/valgrind/default.supp:397
 ==18005==
 ==18005== ERROR SUMMARY: 3 errors from 3 contexts (suppressed: 3884 from 1)
+--------------------------------------------------------------------------------------
+FULL GAME ON RUNNING.
+LEAK SUMMARY:
+==30186==    definitely lost: 38 bytes in 4 blocks
+==30186==    indirectly lost: 352 bytes in 8 blocks
+==30186==      possibly lost: 0 bytes in 0 blocks
+==30186==    still reachable: 57,262 bytes in 857 blocks
+==30186==         suppressed: 0 bytes in 0 blocks
+==30186== 
+==30186== ERROR SUMMARY: 3 errors from 3 contexts (suppressed: 0 from 0)
+==30186== ERROR SUMMARY: 3 errors from 3 contexts (suppressed: 0 from 0)
