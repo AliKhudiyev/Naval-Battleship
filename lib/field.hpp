@@ -21,7 +21,7 @@ class Field{
     void set_recent_succesful_shot(const Position position);
     static bool is_out(int x, int y);
     static Position generate(unsigned max_x, unsigned max_y, unsigned* status);
-    static Position generate(const Position& max_position, const Position& position, unsigned* status);
+    static Position generate(const Position& max_position, const Position& position, unsigned* status, unsigned level);
     unsigned fire(const Position& position);
     bool is_defeated() const;
     bool is_crashed(const Position& position, unsigned length, bool orientation) const;

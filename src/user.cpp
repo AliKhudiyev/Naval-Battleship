@@ -56,3 +56,5 @@ bool User::is_bot() const{ return status_.type_==COMPUTER; }
 Position User::get_recent_succesful_shot() const{
     return field_.get_recent_succesful_shot();
 }
+
+level_t User::get_level() const{ return status_.level_; }

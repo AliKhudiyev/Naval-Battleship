@@ -77,7 +77,7 @@ int Window::on_execute(User& user1, User& user2){
     std::cout<<user1.name()<<" is shooting.\n";
     running=1;
     
-    if(user1.is_bot()){
+    if(user1.is_bot() && !user2.is_bot()){
         while(running==1) on_loop(user1, user2);
         return running;
     }
@@ -112,9 +112,9 @@ void Window::on_loop(User& user1, User& user2){
         if(user1.is_bot()){
             user2.copy_only_others_status(cell_status);
             // position=Field::generate(MAX_COLUMN, MAX_ROW, cell_status);
-            position=Field::generate(Position(11, 11), user1.get_recent_succesful_shot(), cell_status);
+            position=Field::generate(Position(MAX_COLUMN, MAX_ROW), user1.get_recent_succesful_shot(), cell_status, user1.get_level());
         }
-        std::cout<<"Position chose by bot : "<<position.x_<<' '<<position.y_<<'\n';
+        // std::cout<<"Position chose by bot : "<<position.x_<<' '<<position.y_<<'\n';
         unsigned stat=user2.fire(position);
         if(stat==1){
             std::cout<<user1.name()<<"| Succesful shot!\n";
@@ -130,7 +130,7 @@ void Window::on_loop(User& user1, User& user2){
         position=DEFAULT_POSITION;
     }
     user1.copy_status(my_cell_status);
-    user2.copy_status(cell_status);
+    user2.copy_only_others_status(cell_status);
 }
 
 void Window::on_render(){
@@ -146,13 +146,6 @@ void Window::on_render(){
             Surface::on_draw(surface[0], block, CELL_SIZE*I2X(i)+1, CELL_SIZE*I2Y(i)+1);
             SDL_FreeSurface(block);
         }
-        /**/
-        else if(cell_status[i]==3){
-            LOAD_BMP(block, SHIP)
-            Surface::on_draw(surface[0], block, CELL_SIZE*I2X(i)+1, CELL_SIZE*I2Y(i)+1);
-            SDL_FreeSurface(block);
-        }
-        /**/
         if(my_cell_status[i]==1){
             LOAD_BMP(block, LOST_SHIP)
             Surface::on_draw(surface[0], block, MY_X+CELL_SIZE*I2X(i)+1, CELL_SIZE*I2Y(i)+1);

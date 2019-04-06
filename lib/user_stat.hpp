@@ -9,13 +9,13 @@
 #define HARD    2
 
 typedef bool type_t;
-typedef unsigned diff_t;
+typedef unsigned level_t;
 
 struct User_Status{
     bool type_=HUMAN;
-    unsigned difficulty_;
+    unsigned level_;
 
     User_Status(){}
-    User_Status(type_t type, diff_t difficulty):
-        type_(type), difficulty_(difficulty) {}
+    User_Status(type_t type, level_t level):
+        type_(type), level_(level) {}
 };

@@ -17,7 +17,7 @@ class User{
     public:
     explicit User(const std::string& name): 
         name_(name) {}
-    explicit User(std::string& name, const User_Status& status): 
+    explicit User(const std::string& name, const User_Status& status): 
         name_(name), status_(status) {}
     explicit User(const User_Status& status):
         status_(status) {}
@@ -34,4 +34,5 @@ class User{
     bool is_defeated() const;
     bool is_bot() const;
     Position get_recent_succesful_shot() const;
+    level_t get_level() const;
 };

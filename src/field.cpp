@@ -57,11 +57,12 @@ Position Field::generate(unsigned max_x, unsigned max_y, unsigned* status){
     return position;
 }
 
-Position Field::generate(const Position& max_position, const Position& position, unsigned* status){
+Position Field::generate(const Position& max_position, const Position& position, unsigned* status, unsigned level){
+    if(!level) return Field::generate(max_position.x_, max_position.y_, status);
     Position p1=position, p2(-1, -1), pos;
     bool orientation=VERTICAL;
     int direction=1, dx=0, dy=0;
-    std::cout<<"RSS : "<<p1.x_<<' '<<p1.y_<<'\n';
+    // std::cout<<"RSS : "<<p1.x_<<' '<<p1.y_<<'\n';
     
     if(!Field::is_out(p1.x_+1, p1.y_) && status[MAX_COLUMN*p1.y_+p1.x_+1]==1){
         p2=Position(p1.x_+1, p1.y_);
@@ -151,7 +152,7 @@ Position Field::generate(const Position& max_position, const Position& position,
             }
         }
     }
-    std::cout<<"Borders : "<<p2.x_<<' '<<p2.y_<<'\n';
+    // std::cout<<"Borders : "<<p2.x_<<' '<<p2.y_<<'\n';
     if(Position::distance(p1, p2)==5) pos=Field::generate(max_position.x_, max_position.y_, status);
     else if(orientation){
         if(p1.y_-p2.y_>0) direction=-1;
