@@ -1,4 +1,5 @@
 #include"position.hpp"
+#include<cmath>
 
 void Position::init(unsigned x, unsigned y){
     x_=x;    y_=y;
@@ -30,4 +31,8 @@ bool Position::compare(const Position& position, func_ptr_t compare_x, func_ptr_
 
 Position Position::generate(int max_x, int max_y){
     return Position(rand()%max_x, rand()%max_y);
+}
+
+unsigned Position::distance(const Position& position1, const Position& position2){
+    return sqrt(pow(position2.x_-position1.x_, 2)+pow(position2.y_-position1.y_, 2));
 }

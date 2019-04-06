@@ -21,6 +21,10 @@ bool User::set_ship(unsigned index, const Position& position, unsigned length, b
     return field_.set_ship(index, position, length, orientation);
 }
 
+void User::set_recent_succesful_shot(const Position position){
+    field_.set_recent_succesful_shot(position);
+}
+
 void User::place_ships(){
     Position position;
     bool orientation;
@@ -44,3 +48,7 @@ bool User::is_defeated() const{
 }
 
 bool User::is_bot() const{ return status_.type_==COMPUTER; }
+
+Position User::get_recent_succesful_shot() const{
+    return field_.get_recent_succesful_shot();
+}

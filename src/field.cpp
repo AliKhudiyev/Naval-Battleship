@@ -35,20 +35,101 @@ bool Field::set_ship(unsigned index, const Position& position, unsigned length, 
     return true;
 }
 
+void Field::set_recent_succesful_shot(const Position position){
+    recent_succesful_shot_=position;
+}
+
 bool Field::is_out(int x, int y){
     if(x<0 || x>=MAX_COLUMN || y<0 || y>=MAX_ROW) return true;
     return false;
 }
 
 Position Field::generate(unsigned max_x, unsigned max_y, unsigned* status){
+    Position position;
     unsigned i=0;
     int k=rand()%(max_x*max_y);
+    // std::cout<<"k: "<<k<<'\n';
     for(unsigned j=0;k!=-1;++j){
         if(j>=MAX_CELL) j=0;
-        if(!status[j] || status[j]==3){ i=j; k--; }
+        if(!status[j] || status[j]==3){ i=j; --k; }
     }
-    status[i]=S_SHOT_SEA;
-    return Position(i-(i/MAX_COLUMN)*MAX_COLUMN, i/MAX_COLUMN);
+    position=Position(i-(i/MAX_COLUMN)*MAX_COLUMN, i/MAX_COLUMN);
+    return position;
+}
+
+Position Field::generate(const Position& max_position, const Position& position, unsigned* status){
+    Position p1=position, p2(-1, -1), pos;
+    bool orientation;
+    int direction=1;
+    std::cout<<"RSS : "<<p1.x_<<' '<<p1.y_<<'\n';
+    for(unsigned i=0;i<121;++i){
+        if(status[i]==3) status[i]=0;
+    }
+    for(unsigned i=1;i<MAX_SHIP_LENGTH;++i){
+        if(!Field::is_out(p1.x_+i, p1.y_) && status[MAX_COLUMN*p1.y_+p1.x_+i]==1){
+            p2=Position(p1.x_+i, p1.y_);
+            orientation=HORIZONTAL;
+        }
+        else if(!Field::is_out(p1.x_-i, p1.y_) && status[MAX_COLUMN*p1.y_+p1.x_-i]==1){
+            p2=Position(p1.x_-i, p1.y_);
+            orientation=HORIZONTAL;
+        }
+        else if(!Field::is_out(p1.x_, p1.y_+i) && status[MAX_COLUMN*(p1.y_+i)+p1.x_]==1){
+            p2=Position(p1.x_, p1.y_+i);
+            orientation=VERTICAL;
+        }
+        else if(!Field::is_out(p1.x_, p1.y_-i) && status[MAX_COLUMN*(p1.y_-i)+p1.x_]==1){
+            p2=Position(p1.x_, p1.y_-i);
+            orientation=VERTICAL;
+        }
+        else if(!Field::is_out(p1.x_+i, p1.y_) && status[MAX_COLUMN*p1.y_+p1.x_+i]==0){
+            if(p2!=DEFAULT_POSITION) break;
+            p2=Position(p1.x_+i, p1.y_);
+            orientation=HORIZONTAL;
+            break;
+        }
+        else if(!Field::is_out(p1.x_-i, p1.y_) && status[MAX_COLUMN*p1.y_+p1.x_-i]==0){
+            if(p2!=DEFAULT_POSITION) break;
+            p2=Position(p1.x_-i, p1.y_);
+            orientation=HORIZONTAL;
+            break;
+        }
+        else if(!Field::is_out(p1.x_, p1.y_+i) && status[MAX_COLUMN*(p1.y_+i)+p1.x_]==0){
+            if(p2!=DEFAULT_POSITION) break;
+            p2=Position(p1.x_, p1.y_+i);
+            orientation=VERTICAL;
+            break;
+        }
+        else if(!Field::is_out(p1.x_, p1.y_-i) && status[MAX_COLUMN*(p1.y_-i)+p1.x_]==0){
+            if(p2!=DEFAULT_POSITION) break;
+            p2=Position(p1.x_, p1.y_-i);
+            orientation=VERTICAL;
+            break;
+        }
+    }
+    if(Position::distance(p1, p2)==5) pos=Field::generate(max_position.x_, max_position.y_, status);
+    else if(orientation){
+        if(p1.y_-p2.y_>0) direction=-1;
+        if(!Field::is_out(p1.x_, p1.y_-direction) && status[MAX_COLUMN*(p1.y_-direction)+p1.x_]==0){
+            pos=Position(p1.x_, p1.y_-direction);
+        }
+        else if(!Field::is_out(p2.x_, p2.y_+direction) && status[MAX_COLUMN*(p1.y_+direction)+p1.x_]==0){
+            pos=Position(p1.x_, p1.y_+direction);
+        }
+        else pos=Field::generate(max_position.x_, max_position.y_, status);
+    }
+    else{
+        if(p1.x_-p2.x_>0) direction=-1;
+        if(!Field::is_out(p1.x_-direction, p1.y_) && status[MAX_COLUMN*p1.y_+p1.x_-direction]==0){
+            pos=Position(p1.x_-direction, p1.y_);
+        }
+        else if(!Field::is_out(p1.x_+direction, p1.y_) && status[MAX_COLUMN*p1.y_+p1.x_+direction]==0){
+            pos=Position(p1.x_+direction, p1.y_);
+        }
+        else pos=Field::generate(max_position.x_, max_position.y_, status);
+    }
+
+    return pos;
 }
 
 unsigned Field::fire(const Position& position){
@@ -102,4 +183,8 @@ bool Field::is_crashed(const Position& position, unsigned length, bool orientati
 unsigned Field::operator[](unsigned i) const{
     if(i>=MAX_CELL) return -1;
     return is_shot_[i];
+}
+
+Position Field::get_recent_succesful_shot() const{
+    return recent_succesful_shot_;
 }

@@ -16,7 +16,7 @@ using namespace std;
 int main(int argc, char* argv[]){
 
     string name1, name2("Bot");
-    type_t type;
+    type_t type=COMPUTER;
     diff_t difficulty=1;
     INIT_ALL(name1, name2)
 
@@ -24,7 +24,7 @@ int main(int argc, char* argv[]){
     User Player2(User_Status(type, difficulty));
 
     Window* window=Window::Create();    
-    window->run(Player1, Player2);
+    Window::run(Player1, Player2);
     delete window;
 
     return 0;

@@ -11,7 +11,7 @@
 
 #define I2X(index)  (index-(index/MAX_ROW)*MAX_ROW)
 #define I2Y(index)  (index/MAX_ROW)
-#define P2I(x, y)   (MAX_ROW*(y/CELL_SIZE)+(x/CELL_SIZE))
+#define P2I(x, y)   (MAX_COLUMN*(y/CELL_SIZE)+(x/CELL_SIZE))
 
 #define CHECK_QUIT_STATUS(stat)             \
     if(stat==2){                            \
@@ -28,7 +28,7 @@
     if(user2.is_defeated()){                \
         std::cout<<user1.name()<<" won!\n"; \
         stat=2;                             \
-        on_post_render();                   \
+        window->on_post_render();           \
         break;                              \
     }
 
@@ -109,15 +109,23 @@ void Window::on_exit(){
 
 void Window::on_loop(User& user1, User& user2){
     if(position!=DEFAULT_POSITION || user1.is_bot()){
-        if(user1.is_bot()) position=Field::generate(MAX_COLUMN, MAX_ROW, my_cell_status);
+        if(user1.is_bot()){
+            user2.copy_status(cell_status);
+            // position=Field::generate(MAX_COLUMN, MAX_ROW, cell_status);
+            position=Field::generate(Position(11, 11), user1.get_recent_succesful_shot(), cell_status);
+        }
+        std::cout<<"Position chose by bot : "<<position.x_<<' '<<position.y_<<'\n';
         unsigned stat=user2.fire(position);
         if(stat==1){
             std::cout<<user1.name()<<"| Succesful shot!\n";
             running=3;
+            user1.set_recent_succesful_shot(position);
         } else if(stat==0){
             running=1;
+            // user1.set_recent_succesful_shot(DEFAULT_POSITION);
         } else{
             running=0;
+            // user1.set_recent_succesful_shot(DEFAULT_POSITION);
         }
         position=DEFAULT_POSITION;
     }
@@ -138,6 +146,13 @@ void Window::on_render(){
             Surface::on_draw(surface[0], block, CELL_SIZE*I2X(i)+1, CELL_SIZE*I2Y(i)+1);
             SDL_FreeSurface(block);
         }
+        /**
+        else if(cell_status[i]==3){
+            LOAD_BMP(block, SHIP)
+            Surface::on_draw(surface[0], block, CELL_SIZE*I2X(i)+1, CELL_SIZE*I2Y(i)+1);
+            SDL_FreeSurface(block);
+        }
+        /**/
         if(my_cell_status[i]==1){
             LOAD_BMP(block, LOST_SHIP)
             Surface::on_draw(surface[0], block, MY_X+CELL_SIZE*I2X(i)+1, CELL_SIZE*I2Y(i)+1);
@@ -223,9 +238,10 @@ void Window::on_mouse_motion(int x, int y){
         for(unsigned i=0;i<status.ship_size;++i){
             if(x<MY_X || !status.ship_size) break;
             if(status.orientation){
-                if(y/50+status.ship_size<=11) my_cell_status[11*(y/50)+(x-560)/50+11*i]=3;
+                if(y/CELL_SIZE+status.ship_size<=MAX_ROW) my_cell_status[P2I((x-MY_X), (y))+MAX_COLUMN*i]=3;
+
             } else{
-                if((x-560)/50+status.ship_size<=11) my_cell_status[11*(y/50)+(x-560)/50+i]=3;
+                if((x-MY_X)/CELL_SIZE+status.ship_size<=MAX_COLUMN) my_cell_status[P2I((x-MY_X), (y))+i]=3;
             }
         }
     }
@@ -240,8 +256,8 @@ int Window::on_pre_game(User& user){
     status.mod=INIT_MODE;
     running=1;
     unsigned index=0;
-
     bool is_set=false;
+
     SDL_Event event;
     while(running==1){
         while(SDL_PollEvent(&event)) on_event(&event);
@@ -258,7 +274,7 @@ int Window::on_pre_game(User& user){
         user.copy_only_ship_status(my_cell_status);
         on_render();
         bool pass=true;
-        for(unsigned i=0;i<4;++i){
+        for(unsigned i=0;i<MAX_SHIPS-1;++i){
             if(status.n_available_ships[i]!=0){
                 pass=false;
                 break;

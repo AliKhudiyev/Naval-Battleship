@@ -12,16 +12,20 @@ class Field{
     private:
     Ship ships_[MAX_SHIPS];
     unsigned is_shot_[MAX_CELL];     // 0 - not shot and not ship, 1 - shot ship, 2 - shot sea, 3 - ship exists
+    Position recent_succesful_shot_=DEFAULT_POSITION;
 
     public:
     Field();
 
     bool set_ship(unsigned index, const Position& position, unsigned length, bool orientation);
+    void set_recent_succesful_shot(const Position position);
     static bool is_out(int x, int y);
     static Position generate(unsigned max_x, unsigned max_y, unsigned* status);
+    static Position generate(const Position& max_position, const Position& position, unsigned* status);
     unsigned fire(const Position& position);
     bool is_defeated() const;
     bool is_crashed(const Position& position, unsigned length, bool orientation) const;
+    Position get_recent_succesful_shot() const;
 
     // getter operator for is_shot_
     unsigned operator[](unsigned i) const;

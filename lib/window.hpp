@@ -7,8 +7,6 @@
 #include"user.hpp"
 #include"window_stat.hpp"
 
-#define DEFAULT_POSITION Position(-1, -1)
-
 class Window: public Event{
     private:
     unsigned running;
@@ -24,7 +22,7 @@ class Window: public Event{
 
     public:
     static Window* Create();
-    int run(User& user1, User& user2);
+    static int run(User& user1, User& user2);
     int on_execute(User& user1, User& user2);
 
     bool on_init();
