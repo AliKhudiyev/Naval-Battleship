@@ -34,6 +34,7 @@ class Window: public Event{
     void on_loop(User& user1, User& user2);
     void on_render();
     void on_pre_render();
+    void on_post_render();
     void on_quit();
 
     void on_LButton_down(int x, int y);

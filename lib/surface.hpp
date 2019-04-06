@@ -11,6 +11,7 @@
 #define LOST_SEA        "resource/lostSea.bmp"
 #define SELECTED_SHIP   "resource/selectedShip.bmp"
 #define WELCOME         "resource/welcome.bmp"
+#define WIN             "resource/win.bmp"
 
 class Surface{
     public:

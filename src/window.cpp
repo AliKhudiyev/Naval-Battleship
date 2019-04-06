@@ -9,9 +9,28 @@
 #define MY_X    (FIELD_WIDTH+BORDER_WIDTH)
 #define MY_Y    0
 
-#define I2X(index) (index-(index/MAX_ROW)*MAX_ROW)
-#define I2Y(index) (index/MAX_ROW)
-#define P2I(x, y) MAX_ROW*(y/CELL_SIZE)+(x/CELL_SIZE)
+#define I2X(index)  (index-(index/MAX_ROW)*MAX_ROW)
+#define I2Y(index)  (index/MAX_ROW)
+#define P2I(x, y)   (MAX_ROW*(y/CELL_SIZE)+(x/CELL_SIZE))
+
+#define CHECK_QUIT_STATUS(stat)             \
+    if(stat==2){                            \
+        std::cout<<"Quitting the game.\n";  \
+        break;                              \
+    }
+
+#define LOAD_BMP(block, bmp)                        \
+    if(!(block=Surface::on_load(bmp))){             \
+        std::cout<<"Failed to load the image!\n";   \
+    }
+
+#define CHECK_DEFEAT_STATUS(user2, user1)   \
+    if(user2.is_defeated()){                \
+        std::cout<<user1.name()<<" won!\n"; \
+        stat=2;                             \
+        on_post_render();                   \
+        break;                              \
+    }
 
 Window* Window::window=nullptr;
 
@@ -28,7 +47,6 @@ Window::Window(){
 }
 
 void Window::reset(){
-    running=1;
     status.reset();
     position=DEFAULT_POSITION;
 }
@@ -45,27 +63,13 @@ int Window::run(User& user1, User& user2){
     
     while(1){
         do{
-            if(user2.is_defeated()){
-                std::cout<<user1.name()<<" won!\n";
-                stat=2;
-                break;
-            }
+            CHECK_DEFEAT_STATUS(user2, user1)
         }while((stat=window->on_execute(user1, user2))==3);
-        if(stat==2){
-            std::cout<<"Quitting the game.\n";
-            break;
-        }
+        CHECK_QUIT_STATUS(stat)
         do{
-            if(user1.is_defeated()){
-                std::cout<<user2.name()<<" won!\n";
-                stat=2;
-                break;
-            }
+            CHECK_DEFEAT_STATUS(user1, user2)
         }while((stat=window->on_execute(user2, user1))==3);
-        if(stat==2){
-            std::cout<<"Quitting the game.\n";
-            break;
-        }
+        CHECK_QUIT_STATUS(stat)
     }
 }
 
@@ -73,6 +77,11 @@ int Window::on_execute(User& user1, User& user2){
     std::cout<<user1.name()<<" is shooting.\n";
     running=1;
     
+    if(user1.is_bot()){
+        while(running==1) on_loop(user1, user2);
+        return running;
+    }
+
     SDL_Event event;
     while(running==1){
         while(SDL_PollEvent(&event)) on_event(&event);
@@ -100,7 +109,7 @@ void Window::on_exit(){
 
 void Window::on_loop(User& user1, User& user2){
     if(position!=DEFAULT_POSITION || user1.is_bot()){
-        if(user1.is_bot()) position=Position::generate(11, 11);
+        if(user1.is_bot()) position=Position::generate(MAX_COLUMN, MAX_ROW);
         unsigned stat=user2.fire(position);
         if(stat==1){
             std::cout<<user1.name()<<"| Succesful shot!\n";
@@ -121,34 +130,24 @@ void Window::on_render(){
     Surface::on_draw(surface[0], surface[1], MY_X, MY_Y);
     for(unsigned i=0;i<MAX_CELL;++i){
         if(cell_status[i]==1){
-            if(!(block=Surface::on_load(SHOT_SHIP))){
-                std::cout<<"Failed to load the image!\n";
-            }
+            LOAD_BMP(block, SHOT_SHIP)
             Surface::on_draw(surface[0], block, CELL_SIZE*I2X(i)+1, CELL_SIZE*I2Y(i)+1);
             SDL_FreeSurface(block);
         } else if(cell_status[i]==2){
-            if(!(block=Surface::on_load(SHOT_SEA))){
-                std::cout<<"Failed to load the image!\n";
-            }
+            LOAD_BMP(block, SHOT_SEA)
             Surface::on_draw(surface[0], block, CELL_SIZE*I2X(i)+1, CELL_SIZE*I2Y(i)+1);
             SDL_FreeSurface(block);
         }
         if(my_cell_status[i]==1){
-            if(!(block=Surface::on_load(LOST_SHIP))){
-                std::cout<<"Failed to load the image!\n";
-            }
+            LOAD_BMP(block, LOST_SHIP)
             Surface::on_draw(surface[0], block, MY_X+CELL_SIZE*I2X(i)+1, CELL_SIZE*I2Y(i)+1);
             SDL_FreeSurface(block);
         } else if(my_cell_status[i]==2){
-            if(!(block=Surface::on_load(LOST_SEA))){
-                std::cout<<"Failed to load the image!\n";
-            }
+            LOAD_BMP(block, LOST_SEA)
             Surface::on_draw(surface[0], block, MY_X+CELL_SIZE*I2X(i)+1, CELL_SIZE*I2Y(i)+1);
             SDL_FreeSurface(block);
         } else if(my_cell_status[i]==3){
-            if(!(block=Surface::on_load(SHIP))){
-                std::cout<<"Failed to load the image!\n";
-            }
+            LOAD_BMP(block, SHIP)
             Surface::on_draw(surface[0], block, MY_X+CELL_SIZE*I2X(i)+1, CELL_SIZE*I2Y(i)+1);
             SDL_FreeSurface(block);
         }
@@ -160,30 +159,30 @@ void Window::on_render(){
 }
 
 void Window::on_pre_render(){
-    if(!(block=Surface::on_load(WELCOME))){
-        std::cout<<"Failed to load the image!\n";
-    }
+    LOAD_BMP(block, WELCOME)
     Surface::on_draw(surface[0], block, 0, 0);
     SDL_FreeSurface(block);
     for(unsigned j=0;j<4;++j){
         if(status.ship_size==0){
-            if(!(block=Surface::on_load(SHIP))){
-                std::cout<<"Failed to load the image!\n";
-            }
+            LOAD_BMP(block, SHIP)
         } else{
             if(j!=status.ship_size-2){
-                if(!(block=Surface::on_load(SHIP))){
-                    std::cout<<"Failed to load the image!\n";
-                }
+                LOAD_BMP(block, SHIP)
             } else{
-                if(!(block=Surface::on_load(SELECTED_SHIP))){
-                    std::cout<<"Failed to load the image!\n";
-                }
+                LOAD_BMP(block, SELECTED_SHIP)
             }
         }
-        Surface::on_draw(surface[0], block, 100+100*j/*(j-(j/11)*11)+1+50*j*/, 50*6/*(j/11)+1*/);
+        Surface::on_draw(surface[0], block, 100+100*j, 50*6);
         SDL_FreeSurface(block);
     }
+}
+
+void Window::on_post_render(){
+    LOAD_BMP(block, WIN)
+    Surface::on_draw(surface[0], block, 0, 0);
+    SDL_FreeSurface(block);
+    SDL_Flip(surface[0]);
+    sleep(3);
 }
 
 void Window::on_quit(){
@@ -195,7 +194,7 @@ void Window::on_quit(){
 void Window::on_LButton_down(int x, int y){
     if(status.mod==PLAY_MODE) position.init(x/CELL_SIZE, y/CELL_SIZE);
     else{
-        if(x<FIELD_WIDTH){
+        if(x<FIELD_WIDTH && !status.CHOOSED){
             unsigned index=P2I(x, y);
             status.CHOOSED=true;
             if(index==68 && status.n_available_ships[0]) status.ship_size=2;
