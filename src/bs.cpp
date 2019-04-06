@@ -20,11 +20,14 @@
             level[0]=atoi(argv[2]);                 \
             level[1]=atoi(argv[3]);                 \
         }                                           \
-        if(level[0]>1) level[0]=0;                  \
-        if(level[1]>1) level[1]=0;                  \
+        if(level[0]>2) level[0]=0;                  \
+        if(level[1]>2) level[1]=0;                  \
     }
 
 using namespace std;
+
+// extern unsigned count1;
+// extern unsigned count2;
 
 int main(int argc, char* argv[]){
 
@@ -36,7 +39,7 @@ int main(int argc, char* argv[]){
     for(unsigned i=0;i<MAX_PLAYERS;++i){
         if(name[i].empty()){
             string tmp;
-            tmp=level[i]==0? "Easy" : "Normal";
+            tmp=level[i]==0? "Easy" : (level[i]==1? "Normal" : "Hard");
             name[i]=std::to_string(i+1)+". Bot ("+tmp+")";
         }
     }

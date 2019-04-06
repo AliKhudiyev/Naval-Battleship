@@ -16,7 +16,13 @@ And then type
 - to make 2 bots play **_./bs -b [difficulty level1] [difficulty level2]_**
 
 _Note:_ There are 2 difficulty levels: easy and normal. To play with an easy bot type
-0, with a normal bot 1. I am thinking to add a hard bot(2) for the future though.
+0, with a normal bot 1 and with a hard bot 2.
+_The most frequent bot scores over 100 plays:_
+|Bot level \ Bot level|   0   |   1   |   2   |
+|---------------------|:-----:|:-----:|:-----:|
+|          0          | 50\50 | 2\98  | 0\100 |       
+|          1          | 98\2  | 50\50 | 33/67 |
+|          2          | 100\0 | 67\33 | 50\50 |
 
 ## How to play
 The game has 2 modes: **Human vs Human** and **Human vs Bot**.

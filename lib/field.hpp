@@ -20,8 +20,8 @@ class Field{
     bool set_ship(unsigned index, const Position& position, unsigned length, bool orientation);
     void set_recent_succesful_shot(const Position position);
     static bool is_out(int x, int y);
-    static Position generate(unsigned max_x, unsigned max_y, unsigned* status);
-    static Position generate(const Position& max_position, const Position& position, unsigned* status, unsigned level);
+    static Position generate(unsigned max_x, unsigned max_y, const unsigned* const status, unsigned level=0);
+    static Position generate(const Position& max_position, const Position& position, const unsigned* const status, unsigned level);
     unsigned fire(const Position& position);
     bool is_defeated() const;
     bool is_crashed(const Position& position, unsigned length, bool orientation) const;
