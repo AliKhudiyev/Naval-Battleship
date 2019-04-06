@@ -109,7 +109,7 @@ void Window::on_exit(){
 
 void Window::on_loop(User& user1, User& user2){
     if(position!=DEFAULT_POSITION || user1.is_bot()){
-        if(user1.is_bot()) position=Position::generate(MAX_COLUMN, MAX_ROW);
+        if(user1.is_bot()) position=Field::generate(MAX_COLUMN, MAX_ROW, my_cell_status);
         unsigned stat=user2.fire(position);
         if(stat==1){
             std::cout<<user1.name()<<"| Succesful shot!\n";

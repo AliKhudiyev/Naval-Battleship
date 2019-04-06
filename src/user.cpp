@@ -2,16 +2,6 @@
 #include<cstdlib>
 #include<ctime>
 
-int Rand(int max){
-    return rand()%max;
-}
-
-Position rand_position(int max_x, int max_y){
-    return Position(Rand(max_x), Rand(max_y));
-}
-
-/*   User class function definitions   */
-
 const std::string& User::name() const{
     return name_;
 }
@@ -39,8 +29,8 @@ void User::place_ships(){
 
     for(unsigned i=0;i<MAX_SHIPS;){
         length=available_ships[i];
-        orientation=Rand(2)? true : false;
-        position=rand_position(MAX_COLUMN, MAX_ROW);
+        orientation=rand()%2? true : false;
+        position=Position(rand()%MAX_COLUMN, rand()%MAX_ROW);
         if(!set_ship(i++, position, length, orientation)) --i;
     }
 }
@@ -53,4 +43,4 @@ bool User::is_defeated() const{
     return field_.is_defeated();
 }
 
-bool User::is_bot() const{ return !type_; }
+bool User::is_bot() const{ return status_.type_==COMPUTER; }

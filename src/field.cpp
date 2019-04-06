@@ -3,7 +3,7 @@
 #define BORDER_LENGTH 1
 
 Field::Field(){
-    for(unsigned i=0;i<MAX_CELL;++i){ is_shot_[i]=enemy_is_shot_[i]=0; }
+    for(unsigned i=0;i<MAX_CELL;++i){ is_shot_[i]=0; }
 }
 
 bool Field::set_ship(unsigned index, const Position& position, unsigned length, bool orientation){
@@ -38,6 +38,17 @@ bool Field::set_ship(unsigned index, const Position& position, unsigned length, 
 bool Field::is_out(int x, int y){
     if(x<0 || x>=MAX_COLUMN || y<0 || y>=MAX_ROW) return true;
     return false;
+}
+
+Position Field::generate(unsigned max_x, unsigned max_y, unsigned* status){
+    unsigned i=0;
+    int k=rand()%(max_x*max_y);
+    for(unsigned j=0;k!=-1;++j){
+        if(j>=MAX_CELL) j=0;
+        if(!status[j] || status[j]==3){ i=j; k--; }
+    }
+    status[i]=S_SHOT_SEA;
+    return Position(i-(i/MAX_COLUMN)*MAX_COLUMN, i/MAX_COLUMN);
 }
 
 unsigned Field::fire(const Position& position){
