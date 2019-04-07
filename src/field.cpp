@@ -203,6 +203,9 @@ unsigned Field::fire(const Position& position){
             is_shot_[MAX_COLUMN*position.y_+position.x_]=S_SHOT_SHIP;
             if(!ship.get_length()){
                 std::cout<<'\t'<<ship.get_actual_length()<<"-block ship has been destroyed.\n";
+                for(unsigned i=0;i<ship.get_actual_length();++i){
+                    is_shot_[MAX_COLUMN*ship.get_position(i).y_+ship.get_position(i).x_]=S_SANK_SHIP;
+                }
             }
             return S_SHOT_SHIP;
         }

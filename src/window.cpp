@@ -120,7 +120,7 @@ void Window::on_loop(User& user1, User& user2){
             position=Field::generate(user1.get_recent_succesful_shot(), cell_status, user1.get_level());
         }
         unsigned stat=user2.fire(position);
-        if(stat==1){
+        if(stat==S_SHOT_SHIP){
             std::cout<<user1.name()<<"| Succesful shot!\n";
             running=3;
             user1.set_recent_succesful_shot(position);
@@ -139,24 +139,28 @@ void Window::on_render(){
     Surface::on_draw(surface[0], surface[1], ENEMY_X, ENEMY_Y, 0, 0, FIELD_WIDTH, FIELD_HEIGHT);
     Surface::on_draw(surface[0], surface[1], MY_X, MY_Y, 0, 0, FIELD_WIDTH, FIELD_HEIGHT);
     for(unsigned i=0;i<MAX_CELL;++i){
-        if(cell_status[i]==1){
+        if(cell_status[i]==S_SHOT_SHIP){
             LOAD_BMP(block, SHOT_SHIP)
             Surface::on_draw(surface[0], block, CELL_SIZE*I2X(i)+1, CELL_SIZE*I2Y(i)+1);
             SDL_FreeSurface(block);
-        } else if(cell_status[i]==2){
+        } else if(cell_status[i]==S_SHOT_SEA){
             LOAD_BMP(block, SHOT_SEA)
             Surface::on_draw(surface[0], block, CELL_SIZE*I2X(i)+1, CELL_SIZE*I2Y(i)+1);
             SDL_FreeSurface(block);
+        } else if(cell_status[i]==S_SANK_SHIP){
+            LOAD_BMP(block, SANK_SHIP)
+            Surface::on_draw(surface[0], block, CELL_SIZE*I2X(i)+1, CELL_SIZE*I2Y(i)+1);
+            SDL_FreeSurface(block);
         }
-        if(my_cell_status[i]==1){
+        if(my_cell_status[i]==S_SHOT_SHIP || my_cell_status[i]==S_SANK_SHIP){
             LOAD_BMP(block, LOST_SHIP)
             Surface::on_draw(surface[0], block, MY_X+CELL_SIZE*I2X(i)+1, CELL_SIZE*I2Y(i)+1);
             SDL_FreeSurface(block);
-        } else if(my_cell_status[i]==2){
+        } else if(my_cell_status[i]==S_SHOT_SEA){
             LOAD_BMP(block, LOST_SEA)
             Surface::on_draw(surface[0], block, MY_X+CELL_SIZE*I2X(i)+1, CELL_SIZE*I2Y(i)+1);
             SDL_FreeSurface(block);
-        } else if(my_cell_status[i]==3){
+        } else if(my_cell_status[i]==S_SHIP_EXISTS){
             LOAD_BMP(block, SHIP)
             Surface::on_draw(surface[0], block, MY_X+CELL_SIZE*I2X(i)+1, CELL_SIZE*I2Y(i)+1);
             SDL_FreeSurface(block);

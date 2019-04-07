@@ -7,6 +7,7 @@
 #define S_SHOT_SHIP     1
 #define S_SHOT_SEA      2
 #define S_SHIP_EXISTS   3
+#define S_SANK_SHIP     4
 
 class Field{
     private:

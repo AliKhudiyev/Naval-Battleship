@@ -9,6 +9,7 @@
 #define SHOT_SEA        "resource/shotSea.bmp"
 #define LOST_SHIP       "resource/lostShip.bmp"
 #define LOST_SEA        "resource/lostSea.bmp"
+#define SANK_SHIP       "resource/sankShip.bmp"
 #define SELECTED_SHIP   "resource/selectedShip.bmp"
 #define WELCOME         "resource/welcome.bmp"
 #define WIN             "resource/win.bmp"
