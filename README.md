@@ -6,7 +6,7 @@ either vertical or horizontal) on it. There are 4 different types of ships accor
 two 3-block, one 4-block and one 5-block ships are what have to be on the field of each player. After placing the 
 ships, each player starts to fire the blocks. In case of succesful shot to an enemy ship, it is still the shooter's 
 turn to shoot again. Otherwise, it is the other player's turn to play. The game ends when all of the ships of a 
-player are fired up and it shows up **YOU WIN!** animation on the screen for 3 seconds before closing by itself.
+player are fired up and it shows up "**YOU WIN!**" animation on the screen for 3 seconds before closing by itself.
 
 ## How to launch
 After downloading or cloning the game in your computer, open up the terminal from the folder containing the game files.
@@ -19,7 +19,7 @@ _Note:_ There are 2 difficulty levels: easy and normal. To play with an easy bot
 0, with a normal bot 1 and with a hard bot 2.
 _The most frequent bot scores over 100 plays:_
 |Bot level \ Bot level|   0   |   1   |   2   |
-|---------------------|:-----:|:-----:|:-----:|
+|:-------------------:|:-----:|:-----:|:-----:|
 |          0          | 50\50 | 2\98  | 0\100 |       
 |          1          | 98\2  | 50\50 | 33\67 |
 |          2          | 100\0 | 67\33 | 50\50 |
