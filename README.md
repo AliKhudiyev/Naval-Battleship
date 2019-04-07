@@ -18,11 +18,12 @@ And then type
 _Note:_ There are 2 difficulty levels: easy and normal. To play with an easy bot type
 0, with a normal bot 1 and with a hard bot 2.
 _The most frequent bot scores over 100 plays:_
-|Bot level \ Bot level|   0   |   1   |   2   |
-|:-------------------:|:-----:|:-----:|:-----:|
-|          0          | 50\50 | 2\98  | 0\100 |       
-|          1          | 98\2  | 50\50 | 33\67 |
-|          2          | 100\0 | 67\33 | 50\50 |
+
+|Bot level vs Bot level|     0    |     1    |     2    |
+|:--------------------:|:--------:|:--------:|:--------:|
+|          0           | 50 vs 50 | 2 vs 98  | 0 vs 100 |       
+|          1           | 98 vs 2  | 50 vs 50 | 33 vs 67 |
+|          2           | 100 vs 0 | 67 vs 33 | 50 vs 50 |
 
 ## How to play
 The game has 2 modes: **Human vs Human** and **Human vs Bot**.
