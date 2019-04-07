@@ -106,26 +106,18 @@ Position Field::generate(const Position& position, const unsigned* const status,
     }
     else if(!Field::is_out(p1.x_+1, p1.y_) && status[MAX_COLUMN*p1.y_+p1.x_+1]==0){
         p2=Position(p1.x_+1, p1.y_);
-        orientation=HORIZONTAL;
-        dx=1;
         return p2;
     }
     else if(!Field::is_out(p1.x_-1, p1.y_) && status[MAX_COLUMN*p1.y_+p1.x_-1]==0){
         p2=Position(p1.x_-1, p1.y_);
-        orientation=HORIZONTAL;
-        dx=-1;
         return p2;
     }
     else if(!Field::is_out(p1.x_, p1.y_+1) && status[MAX_COLUMN*(p1.y_+1)+p1.x_]==0){
         p2=Position(p1.x_, p1.y_+1);
-        orientation=VERTICAL;
-        dy=1;
         return p2;
     }
     else if(!Field::is_out(p1.x_, p1.y_-1) && status[MAX_COLUMN*(p1.y_-1)+p1.x_]==0){
         p2=Position(p1.x_, p1.y_-1);
-        orientation=VERTICAL;
-        dy=-1;
         return p2;
     }
     else{
@@ -144,13 +136,11 @@ Position Field::generate(const Position& position, const unsigned* const status,
             else if(!Field::is_out(p1.x_, p1.y_+i) && status[MAX_COLUMN*(p1.y_+i)+p1.x_]==0){
                 if(p2!=DEFAULT_POSITION) break;
                 p2=Position(p1.x_, p1.y_+i);
-                orientation=VERTICAL;
                 break;
             }
             else if(!Field::is_out(p1.x_, p1.y_-i) && status[MAX_COLUMN*(p1.y_-i)+p1.x_]==0){
                 if(p2!=DEFAULT_POSITION) break;
                 p2=Position(p1.x_, p1.y_-i);
-                orientation=VERTICAL;
                 break;
             }
         } else{
@@ -200,19 +190,19 @@ Position Field::generate(const Position& position, const unsigned* const status,
 
 unsigned Field::fire(const Position& position){
     if(Field::is_out(position.x_, position.y_)){
-           std::cout<<"Point is out of board!\n";
+           std::cout<<"\tPoint is out of board!\n";
            return 0;
     }
     if(is_shot_[MAX_COLUMN*position.y_+position.x_]!=S_SHIP_EXISTS && 
        is_shot_[MAX_COLUMN*position.y_+position.x_]){
-        std::cout<<"Cannot shoot here more than once!\n";
+        std::cout<<"\tCannot shoot here more than once!\n";
         return 0;
     }
     for(auto& ship: ships_){
         if(ship.fire(position)){
             is_shot_[MAX_COLUMN*position.y_+position.x_]=S_SHOT_SHIP;
             if(!ship.get_length()){
-                std::cout<<ship.get_actual_length()<<"-block ship has been destroyed.\n";
+                std::cout<<'\t'<<ship.get_actual_length()<<"-block ship has been destroyed.\n";
             }
             return S_SHOT_SHIP;
         }
