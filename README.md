@@ -15,7 +15,7 @@ And then type
 - to play with a bot: **_./bs -b [difficulty level]_**
 - to make 2 bots play **_./bs -b [difficulty level1] [difficulty level2]_**
 
-_Note:_ There are 2 difficulty levels: easy and normal. To play with an easy bot type
+_Note:_ There are 3 difficulty levels: easy, normal and hard. To play with an easy bot type
 0, with a normal bot 1 and with a hard bot 2.
 _The most frequent bot scores over 100 plays:_
 
