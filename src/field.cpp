@@ -51,7 +51,7 @@ Position Field::generate(const unsigned* const status, unsigned level){
     for(unsigned j=0;j<MAX_CELL;++j) stat[j]=status[j];
     if(level){
         for(unsigned k=0;k<MAX_CELL;++k){
-            if(stat[k]==1){
+            if(stat[k]==S_SHOT_SHIP || stat[k]==S_SANK_SHIP){
                 if(k>=1){
                     stat[k-1]=S_SHOT_SEA;
                     if(k>=MAX_COLUMN+1) stat[k-1-MAX_COLUMN]=S_SHOT_SEA;
@@ -67,7 +67,6 @@ Position Field::generate(const unsigned* const status, unsigned level){
             }
         }
     }
-    // std::cout<<"done with level\n";
     for(unsigned j=0;k!=-1;++j){
         if(j>=MAX_CELL) j=0;
         if(!stat[j]){ i=j; --k; }
@@ -82,41 +81,43 @@ Position Field::generate(const Position& position, const unsigned* const status,
     bool orientation=VERTICAL;
     int direction=1, dx=0, dy=0;
     int lvl=level==2? 1 : 0;
-    // std::cout<<"RSS : "<<p1.x_<<' '<<p1.y_<<'\n';
+    // std::cout<<"\tRSS : "<<p1.x_<<' '<<p1.y_<<'\n';
     
-    if(!Field::is_out(p1.x_+1, p1.y_) && status[MAX_COLUMN*p1.y_+p1.x_+1]==1){
+    if(status[MAX_COLUMN*p1.y_+p1.x_]==S_SANK_SHIP) return Field::generate(status, lvl);
+
+    if(!Field::is_out(p1.x_+1, p1.y_) && status[MAX_COLUMN*p1.y_+p1.x_+1]==S_SHOT_SHIP){
         p2=Position(p1.x_+1, p1.y_);
         orientation=HORIZONTAL;
         dx=1;
     }
-    else if(!Field::is_out(p1.x_-1, p1.y_) && status[MAX_COLUMN*p1.y_+p1.x_-1]==1){
+    else if(!Field::is_out(p1.x_-1, p1.y_) && status[MAX_COLUMN*p1.y_+p1.x_-1]==S_SHOT_SHIP){
         p2=Position(p1.x_-1, p1.y_);
         orientation=HORIZONTAL;
         dx=-1;
     }
-    else if(!Field::is_out(p1.x_, p1.y_+1) && status[MAX_COLUMN*(p1.y_+1)+p1.x_]==1){
+    else if(!Field::is_out(p1.x_, p1.y_+1) && status[MAX_COLUMN*(p1.y_+1)+p1.x_]==S_SHOT_SHIP){
         p2=Position(p1.x_, p1.y_+1);
         orientation=VERTICAL;
         dy=1;
     }
-    else if(!Field::is_out(p1.x_, p1.y_-1) && status[MAX_COLUMN*(p1.y_-1)+p1.x_]==1){
+    else if(!Field::is_out(p1.x_, p1.y_-1) && status[MAX_COLUMN*(p1.y_-1)+p1.x_]==S_SHOT_SHIP){
         p2=Position(p1.x_, p1.y_-1);
         orientation=VERTICAL;
         dy=-1;
     }
-    else if(!Field::is_out(p1.x_+1, p1.y_) && status[MAX_COLUMN*p1.y_+p1.x_+1]==0){
+    else if(!Field::is_out(p1.x_+1, p1.y_) && status[MAX_COLUMN*p1.y_+p1.x_+1]==S_NSHOT_NSHIP){
         p2=Position(p1.x_+1, p1.y_);
         return p2;
     }
-    else if(!Field::is_out(p1.x_-1, p1.y_) && status[MAX_COLUMN*p1.y_+p1.x_-1]==0){
+    else if(!Field::is_out(p1.x_-1, p1.y_) && status[MAX_COLUMN*p1.y_+p1.x_-1]==S_NSHOT_NSHIP){
         p2=Position(p1.x_-1, p1.y_);
         return p2;
     }
-    else if(!Field::is_out(p1.x_, p1.y_+1) && status[MAX_COLUMN*(p1.y_+1)+p1.x_]==0){
+    else if(!Field::is_out(p1.x_, p1.y_+1) && status[MAX_COLUMN*(p1.y_+1)+p1.x_]==S_NSHOT_NSHIP){
         p2=Position(p1.x_, p1.y_+1);
         return p2;
     }
-    else if(!Field::is_out(p1.x_, p1.y_-1) && status[MAX_COLUMN*(p1.y_-1)+p1.x_]==0){
+    else if(!Field::is_out(p1.x_, p1.y_-1) && status[MAX_COLUMN*(p1.y_-1)+p1.x_]==S_NSHOT_NSHIP){
         p2=Position(p1.x_, p1.y_-1);
         return p2;
     }
@@ -127,62 +128,66 @@ Position Field::generate(const Position& position, const unsigned* const status,
 
     for(unsigned i=2;i<MAX_SHIP_LENGTH;++i){
         if(orientation==VERTICAL){
-            if(!Field::is_out(p1.x_, p1.y_+i) && status[MAX_COLUMN*(p1.y_+i)+p1.x_]==1 && dy==1){
+            if(!Field::is_out(p1.x_, p1.y_+i) && status[MAX_COLUMN*(p1.y_+i)+p1.x_]==S_SHOT_SHIP && dy==1){
                 p2=Position(p1.x_, p1.y_+i);
             }
-            else if(!Field::is_out(p1.x_, p1.y_-i) && status[MAX_COLUMN*(p1.y_-i)+p1.x_]==1 && dy==-1){
+            else if(!Field::is_out(p1.x_, p1.y_-i) && status[MAX_COLUMN*(p1.y_-i)+p1.x_]==S_SHOT_SHIP && dy==-1){
                 p2=Position(p1.x_, p1.y_-i);
             }
-            else if(!Field::is_out(p1.x_, p1.y_+i) && status[MAX_COLUMN*(p1.y_+i)+p1.x_]==0){
+            else if(!Field::is_out(p1.x_, p1.y_+i) && status[MAX_COLUMN*(p1.y_+i)+p1.x_]==S_NSHOT_NSHIP){
                 if(p2!=DEFAULT_POSITION) break;
                 p2=Position(p1.x_, p1.y_+i);
                 break;
             }
-            else if(!Field::is_out(p1.x_, p1.y_-i) && status[MAX_COLUMN*(p1.y_-i)+p1.x_]==0){
+            else if(!Field::is_out(p1.x_, p1.y_-i) && status[MAX_COLUMN*(p1.y_-i)+p1.x_]==S_NSHOT_NSHIP){
                 if(p2!=DEFAULT_POSITION) break;
                 p2=Position(p1.x_, p1.y_-i);
                 break;
             }
         } else{
-            if(!Field::is_out(p1.x_+i, p1.y_) && status[MAX_COLUMN*p1.y_+p1.x_+i]==1 && dx==1){
+            if(!Field::is_out(p1.x_+i, p1.y_) && status[MAX_COLUMN*p1.y_+p1.x_+i]==S_SHOT_SHIP && dx==1){
                 p2=Position(p1.x_+i, p1.y_);
             }
-            else if(!Field::is_out(p1.x_-i, p1.y_) && status[MAX_COLUMN*p1.y_+p1.x_-i]==1 && dx==-1){
+            else if(!Field::is_out(p1.x_-i, p1.y_) && status[MAX_COLUMN*p1.y_+p1.x_-i]==S_SHOT_SHIP && dx==-1){
                 p2=Position(p1.x_-i, p1.y_);
             }
-            else if(!Field::is_out(p1.x_+i, p1.y_) && status[MAX_COLUMN*p1.y_+p1.x_+i]==0){
+            else if(!Field::is_out(p1.x_+i, p1.y_) && status[MAX_COLUMN*p1.y_+p1.x_+i]==S_NSHOT_NSHIP){
                 if(p2!=DEFAULT_POSITION) break;
                 p2=Position(p1.x_+i, p1.y_);
                 break;
             }
-            else if(!Field::is_out(p1.x_-i, p1.y_) && status[MAX_COLUMN*p1.y_+p1.x_-i]==0){
+            else if(!Field::is_out(p1.x_-i, p1.y_) && status[MAX_COLUMN*p1.y_+p1.x_-i]==S_NSHOT_NSHIP){
                 if(p2!=DEFAULT_POSITION) break;
                 p2=Position(p1.x_-i, p1.y_);
                 break;
             }
         }
     }
-    // std::cout<<"Borders : "<<p2.x_<<' '<<p2.y_<<'\n';
+    // std::cout<<"\tBorders : "<<p2.x_<<' '<<p2.y_<<'\n';
     if(Position::distance(p1, p2)==5) pos=Field::generate(status, lvl);
     else if(orientation){
         if(p1.y_-p2.y_>0) direction=-1;
-        if(!Field::is_out(p1.x_, p1.y_-direction) && status[MAX_COLUMN*(p1.y_-direction)+p1.x_]==0){
+        if(!Field::is_out(p1.x_, p1.y_-direction) && status[MAX_COLUMN*(p1.y_-direction)+p1.x_]==S_NSHOT_NSHIP){
             pos=Position(p1.x_, p1.y_-direction);
         }
-        else if(!Field::is_out(p2.x_, p2.y_+direction) && status[MAX_COLUMN*(p2.y_+direction)+p2.x_]==0){
+        else if(!Field::is_out(p2.x_, p2.y_+direction) && status[MAX_COLUMN*(p2.y_+direction)+p2.x_]==S_NSHOT_NSHIP){
             pos=Position(p2.x_, p2.y_+direction);
         }
-        else pos=Field::generate(status, lvl);
+        else{
+            pos=Field::generate(status, lvl);
+        }
     }
     else{
         if(p1.x_-p2.x_>0) direction=-1;
-        if(!Field::is_out(p1.x_-direction, p1.y_) && status[MAX_COLUMN*p1.y_+p1.x_-direction]==0){
+        if(!Field::is_out(p1.x_-direction, p1.y_) && status[MAX_COLUMN*p1.y_+p1.x_-direction]==S_NSHOT_NSHIP){
             pos=Position(p1.x_-direction, p1.y_);
         }
-        else if(!Field::is_out(p2.x_+direction, p2.y_) && status[MAX_COLUMN*p2.y_+p2.x_+direction]==0){
+        else if(!Field::is_out(p2.x_+direction, p2.y_) && status[MAX_COLUMN*p2.y_+p2.x_+direction]==S_NSHOT_NSHIP){
             pos=Position(p2.x_+direction, p2.y_);
         }
-        else pos=Field::generate(status, lvl);
+        else{
+            pos=Field::generate(status, lvl);
+        }
     }
 
     return pos;
