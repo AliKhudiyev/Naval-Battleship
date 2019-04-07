@@ -4,14 +4,20 @@
 
 #define GAME_ON_EXIT 4
 
+#define BEG_X   0
+#define BEG_Y   0
+#define MAX_X   (2*FIELD_WIDTH+BORDER_WIDTH)
+#define MAX_Y   FIELD_HEIGHT
 #define ENEMY_X 0
 #define ENEMY_Y 0
 #define MY_X    (FIELD_WIDTH+BORDER_WIDTH)
 #define MY_Y    0
+#define BPP     32
 
-#define I2X(index)  (index-(index/MAX_ROW)*MAX_ROW)
-#define I2Y(index)  (index/MAX_ROW)
-#define P2I(x, y)   (MAX_COLUMN*(y/CELL_SIZE)+(x/CELL_SIZE))
+#define I2X(index)      (index-(index/MAX_ROW)*MAX_ROW)
+#define I2Y(index)      (index/MAX_ROW)
+#define P2I(x, y)       (MAX_COLUMN*(y/CELL_SIZE)+(x/CELL_SIZE))
+#define P2I_B(x, y, b)  ((CELL_SIZE/b)*MAX_COLUMN*(y/CELL_SIZE)+(x/b))
 
 #define CHECK_QUIT_STATUS(stat)             \
     if(stat==2){                            \
@@ -94,7 +100,7 @@ int Window::on_execute(User& user1, User& user2){
 
 bool Window::on_init(){
     if(SDL_Init(SDL_INIT_VIDEO)<0) return false;
-    if(!(surface[0]=SDL_SetVideoMode(2*FIELD_WIDTH+BORDER_WIDTH, FIELD_HEIGHT, 32, SDL_HWSURFACE | SDL_DOUBLEBUF))) return false;
+    if(!(surface[0]=SDL_SetVideoMode(MAX_X, MAX_Y, BPP, SDL_HWSURFACE | SDL_DOUBLEBUF))) return false;
     if(!(surface[1]=Surface::on_load(BACKGROUND))) return false;
     return true;
 }
@@ -111,10 +117,8 @@ void Window::on_loop(User& user1, User& user2){
     if(position!=DEFAULT_POSITION || user1.is_bot()){
         if(user1.is_bot()){
             user2.copy_only_others_status(cell_status);
-            // position=Field::generate(MAX_COLUMN, MAX_ROW, cell_status);
-            position=Field::generate(Position(MAX_COLUMN, MAX_ROW), user1.get_recent_succesful_shot(), cell_status, user1.get_level());
+            position=Field::generate(user1.get_recent_succesful_shot(), cell_status, user1.get_level());
         }
-        // std::cout<<"Position chose by bot : "<<position.x_<<' '<<position.y_<<'\n';
         unsigned stat=user2.fire(position);
         if(stat==1){
             std::cout<<user1.name()<<"| Succesful shot!\n";
@@ -122,10 +126,8 @@ void Window::on_loop(User& user1, User& user2){
             user1.set_recent_succesful_shot(position);
         } else if(stat==0){
             running=1;
-            // user1.set_recent_succesful_shot(DEFAULT_POSITION);
         } else{
             running=0;
-            // user1.set_recent_succesful_shot(DEFAULT_POSITION);
         }
         position=DEFAULT_POSITION;
     }
@@ -134,8 +136,8 @@ void Window::on_loop(User& user1, User& user2){
 }
 
 void Window::on_render(){
-    Surface::on_draw(surface[0], surface[1], ENEMY_X, ENEMY_Y);
-    Surface::on_draw(surface[0], surface[1], MY_X, MY_Y);
+    Surface::on_draw(surface[0], surface[1], ENEMY_X, ENEMY_Y, 0, 0, FIELD_WIDTH, FIELD_HEIGHT);
+    Surface::on_draw(surface[0], surface[1], MY_X, MY_Y, 0, 0, FIELD_WIDTH, FIELD_HEIGHT);
     for(unsigned i=0;i<MAX_CELL;++i){
         if(cell_status[i]==1){
             LOAD_BMP(block, SHOT_SHIP)
@@ -168,7 +170,7 @@ void Window::on_render(){
 
 void Window::on_pre_render(){
     LOAD_BMP(block, WELCOME)
-    Surface::on_draw(surface[0], block, 0, 0);
+    Surface::on_draw(surface[0], block, 0, 0, 25, 0, FIELD_WIDTH, FIELD_HEIGHT);
     SDL_FreeSurface(block);
     for(unsigned j=0;j<4;++j){
         if(status.ship_size==0){
@@ -180,14 +182,15 @@ void Window::on_pre_render(){
                 LOAD_BMP(block, SELECTED_SHIP)
             }
         }
-        Surface::on_draw(surface[0], block, 100+100*j, 50*6);
+        // 100+100*j, 50*6 : for 11x11
+        Surface::on_draw(surface[0], block, 75+100*j, 50*6);
         SDL_FreeSurface(block);
     }
 }
 
 void Window::on_post_render(){
     LOAD_BMP(block, WIN)
-    Surface::on_draw(surface[0], block, 0, 0);
+    Surface::on_draw(surface[0], block, 0, 0, 25, 25, MAX_X, MAX_Y);
     SDL_FreeSurface(block);
     SDL_Flip(surface[0]);
     sleep(3);
@@ -202,14 +205,14 @@ void Window::on_quit(){
 void Window::on_LButton_down(int x, int y){
     if(status.mod==PLAY_MODE) position.init(x/CELL_SIZE, y/CELL_SIZE);
     else{
-        if(x<FIELD_WIDTH && !status.CHOOSED){
-            unsigned index=P2I(x, y);
+        if(x<FIELD_WIDTH){
+            unsigned index=P2I_B(x, y, 25);
             status.CHOOSED=true;
-            if(index==68 && status.n_available_ships[0]) status.ship_size=2;
-            else if(index==70 && status.n_available_ships[1]) status.ship_size=3;
-            else if(index==72 && status.n_available_ships[2]) status.ship_size=4;
-            else if(index==74 && status.n_available_ships[3]) status.ship_size=5;
-            else status.CHOOSED=false;
+            if(index>=123 && index<=124/*68*/ && status.n_available_ships[0]) status.ship_size=2;
+            else if(index>=127 && index<=128/*70*/ && status.n_available_ships[1]) status.ship_size=3;
+            else if(index>=131 && index<=132/*72*/ && status.n_available_ships[2]) status.ship_size=4;
+            else if(index>=135 && index<=136/*74*/ && status.n_available_ships[3]) status.ship_size=5;
+            else if(!status.ship_size) status.CHOOSED=false;
         }
         on_pre_render();
         if(x>MY_X && status.CHOOSED){    

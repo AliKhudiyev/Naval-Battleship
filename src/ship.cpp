@@ -4,6 +4,10 @@ unsigned Ship::get_length() const{
     return length_;
 }
 
+unsigned Ship::get_actual_length() const{
+    return positions_.size();
+}
+
 const Position& Ship::get_position(unsigned i) const{
     return positions_[i];
 }

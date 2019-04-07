@@ -19,6 +19,7 @@ class Ship{
 
     // getters
     unsigned get_length() const;
+    unsigned get_actual_length() const;
     const Position& get_position(unsigned i) const;
     
     // necessary functions

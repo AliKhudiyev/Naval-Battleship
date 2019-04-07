@@ -6,8 +6,8 @@
 #define VERTICAL    true
 #define HORIZONTAL  false
 
-#define MAX_COLUMN  11
-#define MAX_ROW     11
+#define MAX_COLUMN  10
+#define MAX_ROW     10
 
 #define MAX_CELL        (MAX_COLUMN*MAX_ROW)
 #define MAX_SHIPS       5

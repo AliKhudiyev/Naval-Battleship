@@ -44,13 +44,11 @@ bool Field::is_out(int x, int y){
     return false;
 }
 
-Position Field::generate(unsigned max_x, unsigned max_y,const unsigned* const status, unsigned level){
+Position Field::generate(const unsigned* const status, unsigned level){
     Position position;
     unsigned i=0, stat[MAX_CELL];
-    int k=rand()%(max_x*max_y);
-    // std::cout<<"k: "<<k<<'\n';
+    int k=rand()%(MAX_COLUMN*MAX_ROW);
     for(unsigned j=0;j<MAX_CELL;++j) stat[j]=status[j];
-    // std::cout<<"level: "<<level<<'\n';
     if(level){
         for(unsigned k=0;k<MAX_CELL;++k){
             if(stat[k]==1){
@@ -78,8 +76,8 @@ Position Field::generate(unsigned max_x, unsigned max_y,const unsigned* const st
     return position;
 }
 
-Position Field::generate(const Position& max_position, const Position& position, const unsigned* const status, unsigned level){
-    if(!level) return Field::generate(max_position.x_, max_position.y_, status);
+Position Field::generate(const Position& position, const unsigned* const status, unsigned level){
+    if(!level) return Field::generate(status);
     Position p1=position, p2(-1, -1), pos;
     bool orientation=VERTICAL;
     int direction=1, dx=0, dy=0;
@@ -131,7 +129,7 @@ Position Field::generate(const Position& max_position, const Position& position,
         return p2;
     }
     else{
-        pos=Field::generate(max_position.x_, max_position.y_, status, lvl);
+        pos=Field::generate(status, lvl);
         return pos;
     }
 
@@ -175,7 +173,7 @@ Position Field::generate(const Position& max_position, const Position& position,
         }
     }
     // std::cout<<"Borders : "<<p2.x_<<' '<<p2.y_<<'\n';
-    if(Position::distance(p1, p2)==5) pos=Field::generate(max_position.x_, max_position.y_, status, lvl);
+    if(Position::distance(p1, p2)==5) pos=Field::generate(status, lvl);
     else if(orientation){
         if(p1.y_-p2.y_>0) direction=-1;
         if(!Field::is_out(p1.x_, p1.y_-direction) && status[MAX_COLUMN*(p1.y_-direction)+p1.x_]==0){
@@ -184,7 +182,7 @@ Position Field::generate(const Position& max_position, const Position& position,
         else if(!Field::is_out(p2.x_, p2.y_+direction) && status[MAX_COLUMN*(p2.y_+direction)+p2.x_]==0){
             pos=Position(p2.x_, p2.y_+direction);
         }
-        else pos=Field::generate(max_position.x_, max_position.y_, status, lvl);
+        else pos=Field::generate(status, lvl);
     }
     else{
         if(p1.x_-p2.x_>0) direction=-1;
@@ -194,7 +192,7 @@ Position Field::generate(const Position& max_position, const Position& position,
         else if(!Field::is_out(p2.x_+direction, p2.y_) && status[MAX_COLUMN*p2.y_+p2.x_+direction]==0){
             pos=Position(p2.x_+direction, p2.y_);
         }
-        else pos=Field::generate(max_position.x_, max_position.y_, status, lvl);
+        else pos=Field::generate(status, lvl);
     }
 
     return pos;
@@ -213,6 +211,9 @@ unsigned Field::fire(const Position& position){
     for(auto& ship: ships_){
         if(ship.fire(position)){
             is_shot_[MAX_COLUMN*position.y_+position.x_]=S_SHOT_SHIP;
+            if(!ship.get_length()){
+                std::cout<<ship.get_actual_length()<<"-block ship has been destroyed.\n";
+            }
             return S_SHOT_SHIP;
         }
     }
