@@ -3,6 +3,7 @@
 
 #define HUMAN       true
 #define COMPUTER    false
+#define MAX_PLAYERS 2
 
 #define EASY    0
 #define NORMAL  1

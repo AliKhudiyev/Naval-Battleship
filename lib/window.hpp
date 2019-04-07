@@ -11,10 +11,10 @@ class Window: public Event{
     private:
     unsigned running;
     Window_Status status;
-    SDL_Surface* surface[2], *test;
+    SDL_Surface* surface[MAX_PLAYERS], *test;
     SDL_Surface* block;
     Position position;
-    unsigned cell_status[121], my_cell_status[121];
+    unsigned cell_status[MAX_CELL], my_cell_status[MAX_CELL];
 
     private:
     Window();

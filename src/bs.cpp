@@ -1,8 +1,6 @@
 #include<iostream>
 #include"window.hpp"
 
-#define MAX_PLAYERS 2
-
 #define INIT_ALL()                                  \
     srand(time(NULL));                              \
     if(argc==1){                                    \
@@ -20,8 +18,8 @@
             level[0]=atoi(argv[2]);                 \
             level[1]=atoi(argv[3]);                 \
         }                                           \
-        if(level[0]>2) level[0]=0;                  \
-        if(level[1]>2) level[1]=0;                  \
+        if(level[0]>HARD) level[0]=EASY;            \
+        if(level[1]>HARD) level[1]=EASY;            \
     }
 
 using namespace std;
