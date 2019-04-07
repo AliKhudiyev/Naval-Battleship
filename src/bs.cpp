@@ -26,9 +26,6 @@
 
 using namespace std;
 
-// extern unsigned count1;
-// extern unsigned count2;
-
 int main(int argc, char* argv[]){
 
     string name[MAX_PLAYERS]{"", ""};
@@ -46,8 +43,8 @@ int main(int argc, char* argv[]){
 
     User Player1(name[0], User_Status(type[0], level[0]));
     User Player2(name[1], User_Status(type[1], level[1]));
-
-    Window* window=Window::Create();    
+    
+    Window* window=Window::Create();
     Window::run(Player1, Player2);
     delete window;
 
