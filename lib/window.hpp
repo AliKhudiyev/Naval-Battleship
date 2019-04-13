@@ -22,13 +22,16 @@ class Window: public Event{
 
     public:
     static Window* Create();
+    static int run(User& user, bool sefl=false);
     static int run(User& user1, User& user2);
+    int on_execute(User& user);
     int on_execute(User& user1, User& user2);
 
     bool on_init();
     int on_pre_game(User& user);
     void on_event(SDL_Event* event);
     void on_exit();
+    void on_loop(User& user);
     void on_loop(User& user1, User& user2);
     void on_render();
     void on_pre_render();

@@ -11,9 +11,10 @@ player are fired up and it shows up "**YOU WIN!**" animation on the screen for 3
 ## How to launch
 After downloading or cloning the game in your computer, open up the terminal from the folder containing the game files.
 And then type
-- to play with a human: **_./bs_**
-- to play with a bot: **_./bs -b [difficulty level]_**
-- to make 2 bots play **_./bs -b [difficulty level1] [difficulty level2]_**
+- to play with a human:         **_./bs_**
+- to play with a bot:           **_./bs -b [difficulty level]_**
+- to make 2 bots play:          **_./bs -b [difficulty level1] [difficulty level2]_**
+- to join a multi-player game:  **_./bs -m_**
 
 _Note:_ There are 3 difficulty levels: easy, normal and hard. To play with an easy bot type
 0, with a normal bot 1 and with a hard bot 2.

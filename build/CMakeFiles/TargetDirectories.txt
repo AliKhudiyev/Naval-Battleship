@@ -1,0 +1,3 @@
+/home/ali/Desktop/Naval-Battleship/build/CMakeFiles/rebuild_cache.dir
+/home/ali/Desktop/Naval-Battleship/build/CMakeFiles/bs.dir
+/home/ali/Desktop/Naval-Battleship/build/CMakeFiles/edit_cache.dir

@@ -1,0 +1,1 @@
+/usr/bin/c++   --std=c++17 -Wextra   CMakeFiles/bs.dir/src/bs.cpp.o CMakeFiles/bs.dir/src/user.cpp.o CMakeFiles/bs.dir/src/field.cpp.o CMakeFiles/bs.dir/src/ship.cpp.o CMakeFiles/bs.dir/src/position.cpp.o CMakeFiles/bs.dir/src/event.cpp.o CMakeFiles/bs.dir/src/window.cpp.o CMakeFiles/bs.dir/src/surface.cpp.o  -o bs -lSDL 

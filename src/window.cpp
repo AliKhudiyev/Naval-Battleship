@@ -1,8 +1,13 @@
 #include"window.hpp"
 #include"surface.hpp"
 #include<unistd.h>
+#include<sys/types.h>
+#include<sys/wait.h>
+#include<fcntl.h>
 
 #define GAME_ON_EXIT 4
+
+bool can_shoot=false;
 
 #define BEG_X   0
 #define BEG_Y   0
@@ -38,6 +43,39 @@
         break;                              \
     }
 
+/**/
+void get_invitation_link(bool self){
+    pid_t pid=fork();
+    if(pid==-1) exit(1);
+    else if(pid==0){
+        if(!self){
+            execlp("./invite.sh", "./invite.sh", NULL);
+        }   execlp("./invite.sh", "./invite.sh", "0", NULL);
+    }
+    else{
+        wait(NULL);
+    }
+}
+
+void delete_invitation_link(){
+    pid_t pid=fork();
+    if(pid==-1) exit(1);
+    else if(pid==0){
+        // int fd=open("/dev/null", 0777);
+        // dup2(fd, 2);
+        // pid_t pid2=fork();
+        // if(pid2==-1) exit(1);
+        // else if(pid2==0){
+        //     ;
+        // }
+        execlp("rm", "rm", "invitation.txt", NULL);
+    }
+    else{
+        wait(NULL);
+    }
+}
+/**/
+
 Window* Window::window=nullptr;
 
 Window::Window(){
@@ -62,6 +100,27 @@ Window* Window::Create(){
     return Window::window;
 }
 
+int Window::run(User& user, bool self){
+    unsigned stat=0;
+    if(window->on_pre_game(user)==2) return 2;
+    // std::cout<<" ||| Activating the networking..\n";
+    if(user.is_server()) get_invitation_link(self);
+    user.activate_networking();
+
+    while(1){    // exit/win code - 5
+        do{
+            if(stat==5){
+                std::cout<<user.name()<<" won!\n";
+                window->on_post_render();
+                stat=2;
+                break;
+            }
+        }while((stat=window->on_execute(user))==3);
+        CHECK_QUIT_STATUS(stat)
+    }
+    delete_invitation_link();
+}
+
 int Window::run(User& user1, User& user2){
     unsigned stat=0;
     if(window->on_pre_game(user1)==2) return 2;
@@ -77,6 +136,62 @@ int Window::run(User& user1, User& user2){
         }while((stat=window->on_execute(user2, user1))==3);
         CHECK_QUIT_STATUS(stat)
     }
+}
+
+int Window::on_execute(User& user){
+    running=1;
+    unsigned stat=0;
+    Position p;
+    while(!stat || stat==1){
+        if(user.is_server() || can_shoot){
+            on_render();
+            if(user.is_server()){
+                // std::cout<<"server is waiting for the position\n";
+                Network::receive_package(user.get_client_sock(), &user.get_package(), sizeof(Package));
+                p=user.get_package().position;
+                // std::cout<<"server just got the position: "<<p.x_<<' '<<p.y_<<'\n';
+                stat=user.fire(p);
+                user.get_package().set_status(stat);
+                // std::cout<<"server is sending the status of "<<stat<<"\n";
+                if(user.is_defeated()){
+                    std::cout<<user.name()<<" lost!\n";
+                    user.get_package().status=5;
+                }
+                Network::send_package(user.get_client_sock(), &user.get_package(), sizeof(Package));
+                if(user.is_defeated()) return 2;
+            } else{
+                // std::cout<<"client is waiting for the position\n";
+                Network::receive_package(user.get_server_sock(), &user.get_package(), sizeof(Package));
+                p=user.get_package().position;
+                // std::cout<<"client just got the position: "<<p.x_<<' '<<p.y_<<'\n';
+                stat=user.fire(p);
+                user.get_package().set_status(stat);
+                // std::cout<<"client is sending the status of "<<stat<<"\n";
+                if(user.is_defeated()){
+                    std::cout<<user.name()<<" lost!\n";
+                    user.get_package().status=5;
+                }
+                write(user.get_server_sock(), &user.get_package(), sizeof(Package));
+                if(user.is_defeated()) return 2;
+            }
+            // std::cout<<"\t[!] updating my cell status: ";
+            // std::cout<<p.x_<<' '<<p.y_<<" <=> "<<user.get_package().status<<'\n';
+            if(stat) my_cell_status[MAX_COLUMN*p.y_+p.x_]=stat;
+            // rcv
+            // send
+            // update
+            on_render();
+        } else{ can_shoot=true; break; } // it is a SECOND_SHOOTER
+    }
+    
+    SDL_Event event;
+    while(running==1){
+        while(SDL_PollEvent(&event)) on_event(&event);
+        on_loop(user);
+        on_render();
+    }
+    // std::cout<<"You have just shot!\n";
+    return running;
 }
 
 int Window::on_execute(User& user1, User& user2){
@@ -111,6 +226,50 @@ void Window::on_event(SDL_Event* event){
 
 void Window::on_exit(){
     running=2;
+}
+
+void Window::on_loop(User& user){
+    // if(position!=DEFAULT_POSITION && cell_status[MAX_COLUMN*position.y_+position.x_]){
+    //     std::cout<<"You have already shot here once!\n";
+    //     position=DEFAULT_POSITION;
+    // }
+    // else if(position!=DEFAULT_POSITION && Field::is_out(position.x_, position.y_)){
+    //     std::cout<<"The point is out of board!\n";
+    //     position=DEFAULT_POSITION;
+    // }
+    if(position!=DEFAULT_POSITION){
+        user.get_package().set_position(position);
+        if(user.is_server()){
+            // std::cout<<"Server sending a position\n";
+            Network::send_package(user.get_client_sock(), &user.get_package(), sizeof(Package), 0);
+            // sleep(1);
+            // std::cout<<"Server receiving a status\n";
+            Network::receive_package(user.get_client_sock(), &user.get_package(), sizeof(Package));
+            // std::cout<<"\t> server just received the status\n";
+        } else{
+            // std::cout<<"Client sending a position\n";
+            write(user.get_server_sock(), &user.get_package(), sizeof(Package));
+            // sleep(1);
+            // std::cout<<"Client receiving a status\n";
+            Network::receive_package(user.get_server_sock(), &user.get_package(), sizeof(Package));
+            // std::cout<<"\t> client just received the status\n";
+        }
+        // std::cout<<"\treceived status: "<<user.get_package().status<<'\n';
+        // std::cout<<"\trelated position: "<<position.x_<<' '<<position.y_<<'\n';
+        unsigned stat=user.get_package().status;
+        running=0;
+        if(!stat) running=1;
+        else if(stat==5) running=stat;
+        else{
+            cell_status[MAX_COLUMN*position.y_+position.x_]=user.get_package().status;
+        }
+        if(stat==1) running=1;
+        // send
+        // rcv
+        // update
+        // cell_status[]
+        position=DEFAULT_POSITION;
+    }
 }
 
 void Window::on_loop(User& user1, User& user2){
