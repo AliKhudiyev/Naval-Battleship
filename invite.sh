@@ -1,6 +1,6 @@
 #!/bin/sh
 
-INET_ADDRESS=$(ifconfig | grep "inet ")
+INET_ADDRESS=$(ifconfig | grep "inet 192.168.")
 
 IP_ADDRESS=$(echo $INET_ADDRESS | cut -c6-19)
 
