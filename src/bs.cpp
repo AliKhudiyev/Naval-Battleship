@@ -69,7 +69,7 @@ int main(int argc, char* argv[]){
     if(!Player.is_multi_player()){
         Window::run(Player, Enemy);
     }
-    else Window::run(Player, true);
+    else Window::run(Player, false);
     delete window;
 
     return 0;

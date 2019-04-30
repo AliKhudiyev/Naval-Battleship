@@ -14,7 +14,9 @@ And then type
 - to play with a human:         **_./bs_**
 - to play with a bot:           **_./bs -b [difficulty level]_**
 - to make 2 bots play:          **_./bs -b [difficulty level1] [difficulty level2]_**
-- to join a multi-player game:  **_./bs -m_**
+- to join a multi-player game:  **_./bs -m_** or **./bs -m [path/invitation.txt]**
+
+**_Note:_** In case of multi-player game, first one user opens the game with **./bs -m** and places the ships, then in the game folder there will be created an invitation link with the name "invitation.txt". The player should send it to the oher player connected in the same network. And once the invitation link is received the second user should run the program with **./bs -m path/invitation.txt**.
 
 _Note:_ There are 3 difficulty levels: easy, normal and hard. To play with an easy bot type
 0, with a normal bot 1 and with a hard bot 2.
